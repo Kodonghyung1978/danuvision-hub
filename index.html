@@ -36,6 +36,8 @@
   --c-status-todo-bg: #f0f2f5;
   --c-status-progress-bg: #fce8e3;
   --c-status-done-bg: #e3f0ea;
+  --c-gmail: #D93025;
+  --c-gmail-bg: #fce8e6;
   --font: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
   --radius: 8px;
   --radius-sm: 5px;
@@ -56,6 +58,7 @@
     --c-input-bg: #142637; --c-badge-bg: #1a3040;
     --c-status-todo: #6B7F94; --c-status-progress: #F4845F; --c-status-done: #52B788;
     --c-status-todo-bg: #1a2535; --c-status-progress-bg: #3a2520; --c-status-done-bg: #1a3528;
+    --c-gmail: #F28B82; --c-gmail-bg: #3a2020;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.2); --shadow: 0 2px 8px rgba(0,0,0,0.25);
     --shadow-lg: 0 8px 24px rgba(0,0,0,0.35);
   }
@@ -71,6 +74,7 @@
   --c-input-bg: #142637; --c-badge-bg: #1a3040;
   --c-status-todo: #6B7F94; --c-status-progress: #F4845F; --c-status-done: #52B788;
   --c-status-todo-bg: #1a2535; --c-status-progress-bg: #3a2520; --c-status-done-bg: #1a3528;
+  --c-gmail: #F28B82; --c-gmail-bg: #3a2020;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.2); --shadow: 0 2px 8px rgba(0,0,0,0.25);
   --shadow-lg: 0 8px 24px rgba(0,0,0,0.35);
 }
@@ -98,13 +102,17 @@ body {
 .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.7; }
 .nav-item.active svg { opacity: 1; }
 .nav-footer { margin-top: auto; padding: 16px 18px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: rgba(255,255,255,0.25); }
-.nav-footer .export-btns { display: flex; gap: 6px; margin-top: 8px; }
+.nav-footer .export-btns { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .nav-footer .btn-export {
   padding: 4px 8px; font-size: 10px; background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12); border-radius: 3px; color: rgba(255,255,255,0.5);
   cursor: pointer; font-family: var(--font);
 }
 .nav-footer .btn-export:hover { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.8); }
+.fs-status { display: flex; align-items: center; gap: 6px; margin: 8px 0 4px; font-size: 11px; }
+.fs-dot { width: 7px; height: 7px; border-radius: 50%; background: #E76F51; flex-shrink: 0; }
+.fs-dot.connected { background: #52B788; }
+.fs-path { color: rgba(255,255,255,0.4); font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 170px; display: block; margin-top: 2px; }
 .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
@@ -144,7 +152,8 @@ body {
 .vision-text { font-size: 20px; font-weight: 700; line-height: 1.4; max-width: 600px; }
 .vision-desc { font-size: 13px; margin-top: 10px; opacity: 0.8; max-width: 560px; line-height: 1.6; }
 .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
-.stat-tile { background: var(--c-card); border: 1px solid var(--c-border-light); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow-sm); }
+.stat-tile { background: var(--c-card); border: 1px solid var(--c-border-light); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow-sm); transition: box-shadow var(--transition), border-color var(--transition); }
+.purchase-stat-tile:hover { box-shadow: var(--shadow); border-color: var(--c-accent); }
 .stat-label { font-size: 11px; font-weight: 500; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
 .stat-value { font-size: 28px; font-weight: 700; color: var(--c-primary); font-variant-numeric: tabular-nums; margin-top: 4px; }
 .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; margin-bottom: 24px; }
@@ -157,7 +166,7 @@ body {
 .project-code { font-size: 11px; font-weight: 600; color: var(--c-accent); letter-spacing: 0.04em; margin-bottom: 6px; }
 .project-name { font-size: 15px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
 .project-desc { font-size: 13px; color: var(--c-text-secondary); line-height: 1.5; margin-bottom: 14px; }
-.project-meta { display: flex; gap: 16px; font-size: 12px; color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+.project-meta { display: flex; gap: 16px; font-size: 12px; color: var(--c-text-muted); font-variant-numeric: tabular-nums; align-items: center; flex-wrap: wrap; }
 .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 500; }
 .status-badge::before { content:''; width:6px; height:6px; border-radius:50%; }
 .status-todo { background: var(--c-status-todo-bg); color: var(--c-status-todo); }
@@ -166,25 +175,138 @@ body {
 .status-progress::before { background: var(--c-status-progress); }
 .status-done { background: var(--c-status-done-bg); color: var(--c-status-done); }
 .status-done::before { background: var(--c-status-done); }
-.task-row {
-  display: grid; grid-template-columns: 28px 1fr 120px 100px 90px 60px;
-  gap: 10px; align-items: center; padding: 10px 16px;
+
+/* ── Progress bar ── */
+.progress-wrap { flex: 1; min-width: 100px; max-width: 220px; }
+.progress-bar { height: 6px; background: var(--c-surface-alt); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; background: var(--c-accent); }
+.progress-fill.done { background: var(--c-success); }
+.progress-text { font-size: 11px; color: var(--c-text-muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.progress-lg .progress-bar { height: 8px; border-radius: 4px; }
+.progress-lg .progress-text { font-size: 12px; font-weight: 500; }
+
+/* ── Completion ring ── */
+.completion-ring { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+.completion-ring svg { width: 52px; height: 52px; transform: rotate(-90deg); }
+.completion-ring .ring-bg { fill: none; stroke: var(--c-surface-alt); stroke-width: 4; }
+.completion-ring .ring-fill { fill: none; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease, stroke 0.3s ease; }
+.completion-ring .ring-text {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--c-text); font-variant-numeric: tabular-nums;
+}
+.completion-ring-lg { width: 68px; height: 68px; }
+.completion-ring-lg svg { width: 68px; height: 68px; }
+.completion-ring-lg .ring-bg, .completion-ring-lg .ring-fill { stroke-width: 5; }
+.completion-ring-lg .ring-text { font-size: 16px; }
+
+/* ── Task tree ── */
+.task-tree-row {
+  display: grid; grid-template-columns: 28px 1fr 80px 90px 90px 80px 134px;
+  gap: 8px; align-items: center; padding: 9px 16px;
   border-bottom: 1px solid var(--c-border-light); font-size: 13.5px;
-  transition: background var(--transition);
+  transition: background var(--transition); cursor: pointer;
 }
-.task-row:hover { background: var(--c-surface-alt); }
-.task-row-header {
+.task-tree-row:hover { background: var(--c-surface-alt); }
+.task-tree-row.selected { background: var(--c-accent-muted); box-shadow: inset 3px 0 0 var(--c-accent); }
+
+/* ── Split view: task list + doc pane ── */
+.split-layout { display: flex; gap: 16px; align-items: flex-start; }
+.split-layout > .split-main { flex: 1 1 0; min-width: 0; }
+.split-layout > .doc-pane-col { flex: 0 0 460px; max-width: 460px; }
+.doc-pane { position: sticky; top: 90px; max-height: calc(100vh - 110px); overflow-y: auto; }
+.doc-pane-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--c-border-light); }
+.doc-pane-label { font-size: 10px; font-weight: 600; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.doc-pane-title { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 2px; }
+.doc-pane-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--c-border-light); }
+.doc-pane-item:last-child { border-bottom: none; }
+@media (max-width: 900px) {
+  .split-layout { flex-direction: column; }
+  .split-layout > .doc-pane-col { flex: 1 1 auto; max-width: 100%; width: 100%; }
+  .doc-pane { position: static; max-height: none; }
+}
+.doc-thumb-editable { cursor: pointer; outline: none; border-radius: var(--radius-sm); }
+.doc-thumb-editable:hover, .doc-thumb-editable:focus { box-shadow: 0 0 0 2px var(--c-accent); }
+.thumb-paste-zone {
+  min-height: 54px; border: 1px dashed var(--c-border); border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 12px; color: var(--c-text-muted); padding: 8px; cursor: text; outline: none;
+}
+.thumb-paste-zone:empty::before { content: attr(data-placeholder); }
+.thumb-paste-zone:focus { border-color: var(--c-accent); color: var(--c-text); }
+.doc-type-toggle { display: flex; gap: 6px; }
+.doc-type-toggle .btn.active { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
+.purchase-status-btn {
+  flex-shrink: 0; padding: 3px 9px; font-size: 11px; font-weight: 500; border-radius: 12px;
+  border: 1px solid var(--c-border); background: var(--c-status-todo-bg); color: var(--c-status-todo);
+  cursor: pointer; font-family: var(--font); white-space: nowrap;
+}
+.purchase-status-btn.done { background: var(--c-status-done-bg); color: var(--c-status-done); border-color: transparent; }
+.doc-linked-task-link {
+  font-size: 11px; padding: 3px 9px; border-radius: 12px; border: 1px solid var(--c-border);
+  background: var(--c-badge-bg); color: var(--c-text-secondary); cursor: pointer; font-family: var(--font);
+}
+.doc-linked-task-link:hover { background: var(--c-accent-muted); color: var(--c-accent); border-color: var(--c-accent); }
+.doc-linked-project-link {
+  font-size: 11px; padding: 3px 9px; border-radius: 12px; border: 1px solid var(--c-border);
+  background: var(--c-badge-bg); color: var(--c-text-secondary); cursor: pointer; font-family: var(--font);
+}
+.doc-linked-project-link:hover { background: var(--c-accent-muted); color: var(--c-accent); border-color: var(--c-accent); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-grid.cal-header { margin-bottom: 4px; }
+.cal-cell-header { text-align: center; font-size: 11px; font-weight: 600; color: var(--c-text-muted); padding: 4px 0; }
+.cal-cell { min-height: 64px; border: 1px solid var(--c-border-light); border-radius: var(--radius-sm); padding: 6px; background: var(--c-card); }
+.cal-cell.empty { border: none; background: transparent; }
+.cal-cell.has-data { cursor: pointer; border-color: var(--c-accent); background: var(--c-accent-muted); }
+.cal-cell.has-data:hover { background: var(--c-accent-soft); }
+.cal-cell.today .cal-day-num { color: var(--c-accent); font-weight: 700; }
+.cal-cell.selected { box-shadow: 0 0 0 2px var(--c-primary); }
+.cal-day-num { font-size: 12px; font-weight: 500; }
+.cal-day-total { font-size: 10.5px; font-weight: 600; color: var(--c-primary); margin-top: 4px; }
+.cal-day-count { font-size: 9.5px; color: var(--c-text-muted); }
+@media (max-width: 640px) {
+  .cal-cell { min-height: 48px; padding: 4px; }
+  .cal-day-total { font-size: 9px; }
+}
+.doc-detail-expanded { padding: 10px 12px 12px; }
+.doc-list-item-row, .doc-pane-item { transition: background var(--transition); }
+.doc-list-item-row:hover, .doc-pane-item:hover { background: var(--c-surface-alt); }
+.task-tree-row.header-row {
   font-size: 11px; font-weight: 600; color: var(--c-text-muted);
-  text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--c-border);
+  text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--c-border); cursor: default;
 }
-.task-row-header:hover { background: transparent; }
+.task-tree-row.header-row:hover { background: transparent; }
+.task-title-cell { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.task-indent { flex-shrink: 0; display: flex; align-items: center; }
+.task-indent-line { width: 18px; height: 1px; border-bottom: 1px dashed var(--c-border); margin-right: 4px; }
+.task-title-text {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer;
+  padding: 2px 4px; border-radius: 3px; transition: background var(--transition);
+}
+.task-title-text:hover { background: var(--c-accent-muted); }
+.task-child-count {
+  font-size: 10px; padding: 1px 6px; border-radius: 8px;
+  background: var(--c-accent-muted); color: var(--c-accent); font-weight: 600; flex-shrink: 0;
+}
+.task-progress-mini { display: flex; align-items: center; gap: 6px; }
+.task-progress-mini .progress-bar { flex: 1; min-width: 40px; }
+.task-progress-mini .progress-pct { font-size: 11px; font-weight: 600; color: var(--c-text-secondary); white-space: nowrap; }
+.category-badge {
+  display: inline-flex; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;
+  background: var(--c-badge-bg); color: var(--c-text-secondary); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
 .task-checkbox { width: 18px; height: 18px; accent-color: var(--c-primary); cursor: pointer; }
 .task-project-tag {
   font-size: 11px; padding: 2px 8px; border-radius: 3px; background: var(--c-badge-bg);
   color: var(--c-text-secondary); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .task-date { font-size: 12px; color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
-.task-actions { display: flex; gap: 2px; justify-content: flex-end; }
+.task-actions { display: flex; gap: 4px; justify-content: flex-end; flex-wrap: wrap; }
+.btn-view-docs {
+  padding: 7px 10px; background: var(--c-accent-muted); color: var(--c-accent); border-radius: var(--radius-sm);
+}
+.btn-view-docs:hover { background: var(--c-accent-soft); color: var(--c-accent); }
+.btn-view-docs svg { width: 17px; height: 17px; }
 .goal-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--c-border-light); }
 .goal-item:last-child { border-bottom: none; }
 .goal-marker { width: 10px; height: 10px; border-radius: 50%; background: var(--c-accent); margin-top: 6px; flex-shrink: 0; }
@@ -195,7 +317,8 @@ body {
   position: fixed; inset: 0; background: var(--c-overlay);
   display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px;
 }
-.modal { background: var(--c-card); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
+.modal-overlay[hidden] { display: none !important; }
+.modal { background: var(--c-card); border-radius: var(--radius); box-shadow: var(--shadow-lg); width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; }
 .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--c-border-light); }
 .modal-header h3 { font-size: 15px; font-weight: 600; }
 .modal-body { padding: 20px; }
@@ -219,11 +342,11 @@ body {
 .toast.show { transform: translateY(0); opacity: 1; }
 .section-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 16px; font-size: 13px; font-weight: 600; color: var(--c-text-secondary); }
 .section-divider::after { content:''; flex:1; height:1px; background:var(--c-border-light); }
-.tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--c-border-light); margin-bottom: 18px; }
+.tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--c-border-light); margin-bottom: 18px; overflow-x: auto; }
 .tab-item {
   padding: 8px 18px; font-size: 13px; font-weight: 500; color: var(--c-text-muted);
   cursor: pointer; border: none; background: none; font-family: var(--font);
-  border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color var(--transition);
+  border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color var(--transition); white-space: nowrap;
 }
 .tab-item:hover { color: var(--c-text); }
 .tab-item.active { color: var(--c-primary); border-bottom-color: var(--c-primary); font-weight: 600; }
@@ -240,8 +363,11 @@ body {
   .mobile-nav { display: flex !important; }
   .content { padding: 16px; }
   .topbar { padding: 12px 16px; }
-  .task-row { grid-template-columns: 28px 1fr 80px 60px; }
-  .task-row .task-project-tag, .task-row .task-date { display: none; }
+  .task-tree-row { grid-template-columns: 28px 1fr 80px 96px; }
+  .task-tree-row .category-badge, .task-tree-row .task-date, .task-tree-row .task-progress-mini { display: none; }
+  .task-tree-row.header-row span:nth-child(3),
+  .task-tree-row.header-row span:nth-child(4),
+  .task-tree-row.header-row span:nth-child(5) { display: none; }
   .project-grid { grid-template-columns: 1fr; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
   .vision-banner { padding: 20px; }
@@ -286,15 +412,27 @@ body {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     업무 관리
   </div>
+  <div class="nav-item" data-page="purchases" tabindex="0" role="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    구매 관리
+  </div>
   <div class="nav-item" data-page="docs" tabindex="0" role="button">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
     자료 관리
   </div>
   <div class="nav-footer">
-    v1.0 · JSON 파일기반 DB
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span>v1.3 · 파일기반 DB</span>
+    </div>
+    <div class="fs-status">
+      <span class="fs-dot" id="fsDot"></span>
+      <span id="fsStatusText" style="color:rgba(255,255,255,0.5)">연결 안됨</span>
+    </div>
+    <span class="fs-path" id="fsPath"></span>
     <div class="export-btns">
-      <button class="btn-export" id="btnExport" title="데이터 내보내기">내보내기</button>
-      <button class="btn-export" id="btnImport" title="데이터 가져오기">가져오기</button>
+      <button class="btn-export" id="btnConnect" title="작업 폴더 연결">📁 폴더 연결</button>
+      <button class="btn-export" id="btnExport" title="JSON 내보내기">내보내기</button>
+      <button class="btn-export" id="btnImport" title="JSON 가져오기">가져오기</button>
     </div>
   </div>
 </nav>
@@ -317,6 +455,10 @@ body {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
     업무
   </button>
+  <button class="mobile-nav-item" data-page="purchases">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    구매
+  </button>
   <button class="mobile-nav-item" data-page="docs">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
     자료
@@ -326,10 +468,15 @@ body {
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <div class="topbar-title" id="pageTitle">대시보드</div>
+    <div style="display:flex;align-items:center;gap:10px;min-width:0">
+      <button class="btn-icon" id="globalBackBtn" title="뒤로가기" style="visibility:hidden;flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg>
+      </button>
+      <div class="topbar-title" id="pageTitle">대시보드</div>
+    </div>
     <div class="topbar-actions" id="topbarActions"></div>
   </div>
-  <div class="content" id="pageContent"></div>
+  <div class="content" id="pageContent"><div class="empty-state"><p>로딩 중...</p></div></div>
 </div>
 
 <!-- MODAL -->
@@ -352,45 +499,8 @@ body {
 (function() {
   'use strict';
 
-  // ═══════════════════════════════════════════
-  //  JSON FILE-BASED DB (localStorage + export/import)
-  // ═══════════════════════════════════════════
-  const DB_KEY = 'danuvision_hub_db';
-
-  function loadDB() {
-    try {
-      const raw = localStorage.getItem(DB_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch(e) { console.warn('DB load error', e); }
-    return { goals: {}, projects: {}, tasks: {}, documents: {} };
-  }
-
-  function saveDB(data) {
-    try { localStorage.setItem(DB_KEY, JSON.stringify(data)); } catch(e) { console.warn('DB save error', e); }
-  }
-
-  let store = loadDB();
-
-  // Seed if empty
-  if (Object.keys(store.projects).length === 0) {
-    const id1 = uid(), id2 = uid(), g1 = uid();
-    store.projects[id1] = {
-      id: id1, code: 'PRJ-001', name: '8K 터널 균열관리 촬영 시스템',
-      description: '터널균열관리를 위한 8K 고화소 글로벌셔터카메라를 이용한 터널 벽면 영상 촬영장치, 조명 시스템, 저장시스템, 운영시스템 개발',
-      status: '진행중', startDate: '2024-01-01', endDate: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
-    };
-    store.projects[id2] = {
-      id: id2, code: 'PRJ-002', name: '고성능 엣지 AI CCTV 개발',
-      description: '고성능 엣지 AI기능이 탑재된 CCTV 개발 — 시스템 분석, 솔루션 제안, 시제품 제작, 성능검증, 양산까지',
-      status: '진행중', startDate: '2024-03-01', endDate: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
-    };
-    store.goals[g1] = {
-      id: g1, title: '비전솔루션 전문기업 기반 구축',
-      description: '미래사회가 필요로 하는 영상정보 생산 제품, 시스템 연결, 인터페이스 장치와 서비스 생산 체계 확립',
-      year: new Date().getFullYear(), status: '진행중', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
-    };
-    saveDB(store);
-  }
+  const CATEGORIES = ['설계','개발','시험','구매','문서','회의','기타'];
+  const DOC_CATEGORIES = ['설계문서','시험성적서','회의록','제안서','보고서','기타'];
 
   // ─── HELPERS ───
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
@@ -399,12 +509,302 @@ body {
   function statusClass(s) { return s === '완료' ? 'status-done' : s === '진행중' ? 'status-progress' : 'status-todo'; }
   function statusLabel(s) { return s || '대기'; }
   function vals(col) { return Object.values(store[col] || {}); }
+
   const ICONS = {
     plus: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
     edit: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
     trash: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>',
     back: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg>',
+    sub: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,10 20,15 15,20"/><path d="M4 4v7a4 4 0 004 4h12"/></svg>',
+    mail: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    docs: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>',
+    close: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    openLink: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
   };
+
+  // ═══════════════════════════════════════════
+  //  FILE SYSTEM ACCESS API
+  // ═══════════════════════════════════════════
+  const FS_OK = typeof window.showDirectoryPicker === 'function';
+  let rootHandle = null;
+
+  // IndexedDB for persisting dir handle
+  function idbOpen() {
+    return new Promise((resolve, reject) => {
+      const r = indexedDB.open('danuvision_hub_fs', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('kv');
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+    });
+  }
+  async function idbGet(key) {
+    try { const db = await idbOpen(); return new Promise(r => { const t = db.transaction('kv','readonly').objectStore('kv').get(key); t.onsuccess = () => r(t.result); t.onerror = () => r(null); }); }
+    catch { return null; }
+  }
+  async function idbSet(key, val) {
+    try { const db = await idbOpen(); const tx = db.transaction('kv','readwrite'); tx.objectStore('kv').put(val, key); return new Promise(r => { tx.oncomplete = r; }); }
+    catch {}
+  }
+
+  // FS file ops
+  async function fsWrite(dirH, name, data) {
+    const fh = await dirH.getFileHandle(name, { create: true });
+    const w = await fh.createWritable();
+    await w.write(JSON.stringify(data, null, 2));
+    await w.close();
+  }
+  async function fsRead(dirH, name) {
+    try {
+      const fh = await dirH.getFileHandle(name);
+      const f = await fh.getFile();
+      return JSON.parse(await f.text());
+    } catch { return null; }
+  }
+  async function fsGetDir(parentH, name) {
+    return parentH.getDirectoryHandle(name, { create: true });
+  }
+  function safeFolderName(code, name) {
+    const s = (code || name || 'project').replace(/[<>:"/\\|?*\x00-\x1f]/g, '_').replace(/\s+/g, '_');
+    return s.slice(0, 80);
+  }
+
+  // Restore saved handle
+  async function restoreFS() {
+    if (!FS_OK) return false;
+    try {
+      const h = await idbGet('rootDir');
+      if (!h) return false;
+      if (await h.queryPermission({ mode: 'readwrite' }) === 'granted') {
+        rootHandle = h;
+        updateFSUI();
+        return true;
+      }
+      // Try requesting — requires user gesture, so queue it for next click
+      return false;
+    } catch { return false; }
+  }
+  async function requestPermission() {
+    if (!FS_OK) return false;
+    try {
+      const h = await idbGet('rootDir');
+      if (h) {
+        const p = await h.requestPermission({ mode: 'readwrite' });
+        if (p === 'granted') { rootHandle = h; updateFSUI(); return true; }
+      }
+    } catch {}
+    return false;
+  }
+  async function pickFolder() {
+    if (!FS_OK) { toast('이 브라우저는 폴더 연결을 지원하지 않습니다 (Chrome/Edge 필요)'); return false; }
+    try {
+      rootHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+      await idbSet('rootDir', rootHandle);
+      updateFSUI();
+      return true;
+    } catch { return false; }
+  }
+  function updateFSUI() {
+    const dot = document.getElementById('fsDot');
+    const txt = document.getElementById('fsStatusText');
+    const path = document.getElementById('fsPath');
+    if (rootHandle) {
+      dot.classList.add('connected');
+      txt.textContent = '폴더 연결됨';
+      path.textContent = rootHandle.name;
+    } else {
+      dot.classList.remove('connected');
+      txt.textContent = '연결 안됨';
+      path.textContent = '';
+    }
+  }
+
+  // ─── PERSISTENT SAVE: files + localStorage ───
+  async function saveConfig() {
+    const data = { goals: store.goals, documents: store.documents };
+    try { localStorage.setItem('danuvision_hub_db', JSON.stringify(store)); } catch {}
+    if (!rootHandle) return;
+    try { await fsWrite(rootHandle, '_config.json', data); } catch(e) { console.warn('Config save error', e); }
+  }
+  async function saveProjectMeta() {
+    // Save project list (without tasks)
+    try { localStorage.setItem('danuvision_hub_db', JSON.stringify(store)); } catch {}
+    if (!rootHandle) return;
+    try { await fsWrite(rootHandle, '_projects.json', store.projects); } catch(e) { console.warn('Projects save error', e); }
+  }
+  async function saveProjectTasks(projectId) {
+    try { localStorage.setItem('danuvision_hub_db', JSON.stringify(store)); } catch {}
+    if (!rootHandle || !projectId) return;
+    const proj = store.projects[projectId];
+    if (!proj) return;
+    try {
+      const folderName = proj._folder || safeFolderName(proj.code, proj.name);
+      proj._folder = folderName;
+      const dir = await fsGetDir(rootHandle, folderName);
+      // Save project info
+      const { _folder, ...projData } = proj;
+      await fsWrite(dir, 'project.json', projData);
+      // Save tasks for this project
+      const projTasks = {};
+      for (const [id, t] of Object.entries(store.tasks)) {
+        if (t.projectId === projectId) projTasks[id] = t;
+      }
+      await fsWrite(dir, 'tasks.json', projTasks);
+    } catch(e) { console.warn('Task save error', e); }
+  }
+  async function saveAllToFiles() {
+    try { localStorage.setItem('danuvision_hub_db', JSON.stringify(store)); } catch {}
+    if (!rootHandle) return;
+    try {
+      await fsWrite(rootHandle, '_config.json', { goals: store.goals, documents: store.documents });
+      await fsWrite(rootHandle, '_projects.json', store.projects);
+      for (const p of vals('projects')) {
+        await saveProjectTasks(p.id);
+      }
+      // Save tasks without a project
+      const unassigned = {};
+      for (const [id, t] of Object.entries(store.tasks)) {
+        if (!t.projectId) unassigned[id] = t;
+      }
+      if (Object.keys(unassigned).length > 0) {
+        const dir = await fsGetDir(rootHandle, '_일반업무');
+        await fsWrite(dir, 'tasks.json', unassigned);
+      }
+    } catch(e) { console.warn('Save all error', e); }
+  }
+  async function loadFromFiles() {
+    if (!rootHandle) return null;
+    try {
+      const config = await fsRead(rootHandle, '_config.json');
+      const projects = await fsRead(rootHandle, '_projects.json');
+      const data = {
+        goals: config?.goals || {},
+        documents: config?.documents || {},
+        projects: projects || {},
+        tasks: {}
+      };
+      // Load tasks from each project folder
+      for (const p of Object.values(data.projects)) {
+        const folderName = p._folder || safeFolderName(p.code, p.name);
+        p._folder = folderName;
+        try {
+          const dir = await rootHandle.getDirectoryHandle(folderName);
+          const tasks = await fsRead(dir, 'tasks.json');
+          if (tasks) Object.assign(data.tasks, tasks);
+        } catch {} // folder may not exist yet
+      }
+      // Load unassigned tasks
+      try {
+        const uDir = await rootHandle.getDirectoryHandle('_일반업무');
+        const uTasks = await fsRead(uDir, 'tasks.json');
+        if (uTasks) Object.assign(data.tasks, uTasks);
+      } catch {}
+      return data;
+    } catch(e) { console.warn('Load from files error', e); return null; }
+  }
+  // Quick save to localStorage only
+  function saveLS() {
+    try { localStorage.setItem('danuvision_hub_db', JSON.stringify(store)); } catch {}
+  }
+
+  // ═══════════════════════════════════════════
+  //  STORE
+  // ═══════════════════════════════════════════
+  let store = { goals: {}, projects: {}, tasks: {}, documents: {} };
+
+  function loadLS() {
+    try {
+      const raw = localStorage.getItem('danuvision_hub_db');
+      if (raw) return JSON.parse(raw);
+    } catch {}
+    return null;
+  }
+
+  // ─── HIERARCHY HELPERS ───
+  function getChildren(taskId) { return vals('tasks').filter(t => t.parentTaskId === taskId); }
+  function hasChildren(taskId) { return vals('tasks').some(t => t.parentTaskId === taskId); }
+  function getLeafTasks(taskId) {
+    const children = getChildren(taskId);
+    if (children.length === 0) return [store.tasks[taskId]];
+    let leaves = [];
+    for (const c of children) leaves = leaves.concat(getLeafTasks(c.id));
+    return leaves;
+  }
+  function getProjectLeafTasks(projectId) {
+    return vals('tasks').filter(t => t.projectId === projectId && !hasChildren(t.id));
+  }
+  function calcTaskProgress(taskId) {
+    const leaves = getLeafTasks(taskId);
+    const total = leaves.length;
+    const done = leaves.filter(l => l && l.status === '완료').length;
+    return { total, done, pct: total === 0 ? 0 : Math.round(done / total * 100) };
+  }
+  function calcProjectProgress(projectId) {
+    const leaves = getProjectLeafTasks(projectId);
+    const total = leaves.length;
+    const done = leaves.filter(l => l.status === '완료').length;
+    return { total, done, pct: total === 0 ? 0 : Math.round(done / total * 100) };
+  }
+  function getGoalTasks(goalId) {
+    return vals('tasks').filter(t => t.goalId === goalId);
+  }
+  function calcGoalProgress(goalId) {
+    const leaves = getGoalTasks(goalId).filter(t => !hasChildren(t.id));
+    const total = leaves.length;
+    const done = leaves.filter(l => l.status === '완료').length;
+    return { total, done, pct: total === 0 ? 0 : Math.round(done / total * 100) };
+  }
+  function getPurchaseTotal(t) {
+    return (t?.purchaseItems || []).reduce((s, it) => s + (Number(it.amount) || 0), 0);
+  }
+  function getPurchaseSpent(t) {
+    return (t?.purchaseItems || []).filter(it => it.purchased).reduce((s, it) => s + (Number(it.amount) || 0), 0);
+  }
+  function fmtWon(n) { return n.toLocaleString() + '원'; }
+  function buildTaskTree(tasks, parentId, depth) {
+    parentId = parentId || null;
+    depth = depth || 0;
+    const roots = tasks.filter(t => (t.parentTaskId || null) === parentId);
+    let result = [];
+    for (const t of roots) {
+      result.push({ ...t, _depth: depth });
+      result = result.concat(buildTaskTree(tasks, t.id, depth + 1));
+    }
+    return result;
+  }
+  function getDescendantIds(taskId) {
+    const ids = [];
+    for (const c of getChildren(taskId)) { ids.push(c.id); ids.push(...getDescendantIds(c.id)); }
+    return ids;
+  }
+  function updateParentStatus(taskId) {
+    const task = store.tasks[taskId];
+    if (!task || !task.parentTaskId) return;
+    const parent = store.tasks[task.parentTaskId];
+    if (!parent) return;
+    const siblings = getChildren(parent.id);
+    const allDone = siblings.every(s => s.status === '완료');
+    const anyProgress = siblings.some(s => s.status === '진행중' || s.status === '완료');
+    parent.status = allDone ? '완료' : anyProgress ? '진행중' : '대기';
+    parent.updatedAt = new Date().toISOString();
+    updateParentStatus(parent.id);
+  }
+
+  // Progress HTML
+  function progressBarHtml(prog, cls) {
+    cls = cls || '';
+    return `<div class="progress-wrap ${cls}"><div class="progress-bar"><div class="progress-fill${prog.pct>=100?' done':''}" style="width:${prog.pct}%"></div></div><div class="progress-text">${prog.done}/${prog.total} 완료 (${prog.pct}%)</div></div>`;
+  }
+  function completionRingHtml(prog, large) {
+    const r = large ? 28 : 22, cx = large ? 34 : 26;
+    const circ = 2 * Math.PI * r, offset = circ - (prog.pct / 100) * circ;
+    const color = prog.pct >= 100 ? 'var(--c-success)' : prog.pct > 0 ? 'var(--c-accent)' : 'var(--c-text-muted)';
+    const cls = large ? 'completion-ring completion-ring-lg' : 'completion-ring';
+    return `<div class="${cls}"><svg viewBox="0 0 ${cx*2} ${cx*2}"><circle class="ring-bg" cx="${cx}" cy="${cx}" r="${r}"/><circle class="ring-fill" cx="${cx}" cy="${cx}" r="${r}" stroke="${color}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/></svg><div class="ring-text">${prog.pct}%</div></div>`;
+  }
+  function progressMiniHtml(prog) {
+    if (prog.total === 0) return '';
+    return `<div class="task-progress-mini"><div class="progress-bar" style="width:60px"><div class="progress-fill${prog.pct>=100?' done':''}" style="width:${prog.pct}%"></div></div><span class="progress-pct">${prog.pct}%</span></div>`;
+  }
 
   // ─── MODAL ───
   function openModal(title, bodyHtml, footerHtml) {
@@ -423,9 +823,8 @@ body {
   document.getElementById('btnExport').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(store, null, 2)], {type:'application/json'});
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = 'danuvision_hub_data_' + new Date().toISOString().slice(0,10) + '.json';
-    a.click(); URL.revokeObjectURL(a.href);
-    toast('데이터를 내보냈습니다');
+    a.download = 'danuvision_hub_' + new Date().toISOString().slice(0,10) + '.json';
+    a.click(); URL.revokeObjectURL(a.href); toast('데이터를 내보냈습니다');
   });
   document.getElementById('btnImport').addEventListener('click', () => document.getElementById('fileImport').click());
   document.getElementById('fileImport').addEventListener('change', e => {
@@ -435,42 +834,400 @@ body {
       try {
         const data = JSON.parse(ev.target.result);
         if (data.goals && data.projects) {
-          store = data; saveDB(store);
-          toast('데이터를 가져왔습니다');
-          navigateTo(currentPage);
+          store = data; saveLS();
+          saveAllToFiles().then(() => { toast('데이터를 가져왔습니다'); navigateTo(currentPage); });
         } else { toast('올바른 데이터 파일이 아닙니다'); }
       } catch { toast('파일 읽기 오류'); }
     };
-    reader.readAsText(file);
-    e.target.value = '';
+    reader.readAsText(file); e.target.value = '';
+  });
+
+  // ─── FOLDER CONNECT ───
+  document.getElementById('btnConnect').addEventListener('click', async () => {
+    // First try restoring permission
+    if (await requestPermission()) {
+      const fileData = await loadFromFiles();
+      if (fileData && Object.keys(fileData.projects).length > 0) {
+        store = fileData; saveLS();
+        toast('폴더에서 데이터를 불러왔습니다');
+      } else {
+        await saveAllToFiles();
+        toast('폴더가 연결되었습니다');
+      }
+      navigateTo(currentPage);
+      return;
+    }
+    // Pick new folder
+    if (await pickFolder()) {
+      // Check if folder already has data
+      const fileData = await loadFromFiles();
+      if (fileData && Object.keys(fileData.projects).length > 0) {
+        store = fileData; saveLS();
+        toast('기존 데이터를 불러왔습니다');
+      } else {
+        await saveAllToFiles();
+        toast('폴더가 연결되었습니다 — 데이터가 파일로 저장됩니다');
+      }
+      navigateTo(currentPage);
+    }
   });
 
   // ─── NAVIGATION ───
   let currentPage = 'dashboard';
-  function navigateTo(page, ctx) {
+  let currentCtx = null;
+  let selectedTaskId = null;
+  let expandedTaskId = null;
+  let docPaneTaskId = null;
+  let docPaneExpandedId = null;
+  let docsPageExpandedId = null;
+  let docsKindFilter = 'all';
+  let projDocExpandedId = null;
+  let projDocFormOpen = false;
+  let purchaseFilter = defaultPurchaseFilter();
+  let navHistory = [];
+  function navigateTo(page, ctx, isBack) {
+    ctx = ctx || null;
+    const changed = page !== currentPage || ctx !== currentCtx;
+    if (changed) {
+      docPaneTaskId = null; docPaneExpandedId = null; docsPageExpandedId = null;
+      projDocExpandedId = null; projDocFormOpen = false;
+      if (!isBack) navHistory.push({ page: currentPage, ctx: currentCtx });
+    }
     currentPage = page;
+    currentCtx = ctx;
     document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(el => el.classList.toggle('active', el.dataset.page === page));
-    const titles = { dashboard:'대시보드', goals:'연간 목표', projects:'프로젝트', tasks:'업무 관리', docs:'자료 관리' };
+    const titles = { dashboard:'대시보드', goals:'연간 목표', projects:'프로젝트', tasks:'업무 관리', purchases:'구매 관리', docs:'자료 관리' };
     document.getElementById('pageTitle').textContent = titles[page] || page;
     document.getElementById('topbarActions').innerHTML = '';
+    const backBtn = document.getElementById('globalBackBtn');
+    if (backBtn) backBtn.style.visibility = navHistory.length > 0 ? 'visible' : 'hidden';
     switch(page) {
       case 'dashboard': renderDashboard(); break;
       case 'goals': renderGoals(); break;
       case 'projects': renderProjects(); break;
       case 'project-detail': renderProjectDetail(ctx); break;
       case 'tasks': renderTasks(); break;
+      case 'purchases': renderPurchaseManagement(); break;
       case 'docs': renderDocs(); break;
     }
   }
+  function goBack() {
+    const prev = navHistory.pop();
+    if (prev) navigateTo(prev.page, prev.ctx, true);
+  }
+  document.getElementById('globalBackBtn').addEventListener('click', goBack);
   document.querySelectorAll('.nav-item, .mobile-nav-item').forEach(el => {
     el.addEventListener('click', () => { if (el.dataset.page) navigateTo(el.dataset.page); });
     el.addEventListener('keydown', e => { if (e.key === 'Enter' && el.dataset.page) navigateTo(el.dataset.page); });
   });
 
+  // ─── DOC LINKING (many-to-many: a document can be shared across tasks/projects via its hash code) ───
+  function genDocHash() {
+    const existing = new Set(vals('documents').map(d => d.hash).filter(Boolean));
+    let h;
+    do { h = Math.random().toString(36).slice(2, 8).toUpperCase(); } while (existing.has(h));
+    return h;
+  }
+  function findDocByHash(hash) {
+    const h = (hash || '').trim().toUpperCase();
+    if (!h) return null;
+    return vals('documents').find(d => d.hash === h) || null;
+  }
+  function getTaskDocs(taskId) {
+    const t = store.tasks[taskId];
+    if (!t || !Array.isArray(t.docIds)) return [];
+    return t.docIds.map(id => store.documents[id]).filter(Boolean);
+  }
+  function getDocLinkedTaskCount(docId) {
+    return vals('tasks').filter(t => Array.isArray(t.docIds) && t.docIds.includes(docId)).length;
+  }
+  function getDocLinkedTasks(docId) {
+    return vals('tasks').filter(t => Array.isArray(t.docIds) && t.docIds.includes(docId));
+  }
+  function getDocLinkedProjects(docId) {
+    return vals('projects').filter(p => Array.isArray(p.docIds) && p.docIds.includes(docId));
+  }
+  function getDocKind(d) {
+    if (d.type === 'mail') return 'mail';
+    if (d.thumbnail) return 'thumbnail';
+    if (d.url) return 'link';
+    return 'other';
+  }
+  function attachDocToTask(taskId, docId) {
+    const t = store.tasks[taskId];
+    if (!t) return false;
+    if (!Array.isArray(t.docIds)) t.docIds = [];
+    if (t.docIds.includes(docId)) return false;
+    t.docIds.push(docId);
+    t.updatedAt = new Date().toISOString();
+    return true;
+  }
+  function detachDocFromTask(taskId, docId) {
+    const t = store.tasks[taskId];
+    if (!t || !Array.isArray(t.docIds)) return;
+    t.docIds = t.docIds.filter(id => id !== docId);
+    t.updatedAt = new Date().toISOString();
+  }
+  function getProjectDocs(projectId) {
+    const p = store.projects[projectId];
+    if (!p || !Array.isArray(p.docIds)) return [];
+    return p.docIds.map(id => store.documents[id]).filter(Boolean);
+  }
+  function attachDocToProject(projectId, docId) {
+    const p = store.projects[projectId];
+    if (!p) return false;
+    if (!Array.isArray(p.docIds)) p.docIds = [];
+    if (p.docIds.includes(docId)) return false;
+    p.docIds.push(docId);
+    p.updatedAt = new Date().toISOString();
+    return true;
+  }
+  function detachDocFromProject(projectId, docId) {
+    const p = store.projects[projectId];
+    if (!p || !Array.isArray(p.docIds)) return;
+    p.docIds = p.docIds.filter(id => id !== docId);
+    p.updatedAt = new Date().toISOString();
+  }
+  function genTaskHash() {
+    const existing = new Set(vals('tasks').map(t => t.hash).filter(Boolean));
+    let h;
+    do { h = Math.random().toString(36).slice(2, 8).toUpperCase(); } while (existing.has(h));
+    return h;
+  }
+  function docThumbBoxHtml(d, size) {
+    size = size || 36;
+    const inner = d.thumbnail
+      ? `<img src="${esc(d.thumbnail)}" style="width:${size}px;height:${size}px;object-fit:cover;border-radius:var(--radius-sm)" alt="">`
+      : `<div style="width:${size}px;height:${size}px;border-radius:var(--radius-sm);background:${d.type==='mail'?'var(--c-gmail-bg)':'var(--c-accent-muted)'};color:${d.type==='mail'?'var(--c-gmail)':'var(--c-accent)'};display:flex;align-items:center;justify-content:center">${d.type==='mail'?ICONS.mail:ICONS.docs}</div>`;
+    if (d.url) return `<a href="${esc(d.url)}" target="_blank" rel="noopener" class="doc-item-actions" title="열기" onclick="event.stopPropagation()" style="flex-shrink:0;display:block">${inner}</a>`;
+    return `<div style="flex-shrink:0">${inner}</div>`;
+  }
+  // Expanded detail block for a document row — shown when the row is clicked.
+  // All fields here save directly to the document on edit (no separate "save" step needed).
+  function docDetailExpandedHtml(d, excludeTaskId, excludeProjectId) {
+    const linkedTasks = getDocLinkedTasks(d.id).filter(t => t.id !== excludeTaskId);
+    const linkedProjects = getDocLinkedProjects(d.id).filter(p => p.id !== excludeProjectId);
+    return `<div class="doc-detail-expanded">
+      <div class="thumb-paste-zone doc-thumb-editable" contenteditable="true" data-id="${d.id}" data-placeholder="이미지를 복사한 후 여기를 클릭하고 Ctrl+V로 붙여넣기" title="클릭 후 이미지를 붙여넣어(Ctrl+V) 썸네일을 등록/변경하세요" style="min-height:90px">${d.thumbnail?`<img src="${esc(d.thumbnail)}" style="max-width:100%;max-height:180px;border-radius:var(--radius-sm)" alt="">`:''}</div>
+      <div class="form-group" style="margin-top:8px;margin-bottom:6px">
+        <input class="form-input doc-field-edit" data-id="${d.id}" data-field="title" placeholder="자료명" value="${esc(d.title)}" style="font-size:12.5px;padding:6px 8px">
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <input class="form-input doc-field-edit" data-id="${d.id}" data-field="url" placeholder="링크 (URL)" value="${esc(d.url||'')}" style="flex:1;font-size:12px;padding:6px 8px">
+        <a href="${esc(d.url||'#')}" target="_blank" rel="noopener" class="btn doc-open-link" data-id="${d.id}" style="flex-shrink:0;font-size:12px;padding:6px 10px;text-decoration:none;${d.url?'':'display:none'}">${d.type==='mail'?ICONS.mail:ICONS.openLink} 열기</a>
+        <select class="form-select doc-field-edit" data-id="${d.id}" data-field="category" style="flex-shrink:0;width:110px;font-size:12px;padding:6px 8px">
+          <option value="">분류 없음</option>
+          ${DOC_CATEGORIES.map(c => `<option value="${c}" ${d.category===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <textarea class="form-textarea doc-field-edit" data-id="${d.id}" data-field="description" placeholder="설명 / 메모" style="font-size:12px;min-height:46px;padding:6px 8px">${esc(d.description||'')}</textarea>
+      <div style="margin-top:10px">
+        <div style="font-size:11px;color:var(--c-text-muted);margin-bottom:4px">연결된 업무${linkedTasks.length?` (${linkedTasks.length})`:''}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${linkedTasks.length===0?'<span style="font-size:11px;color:var(--c-text-muted)">-</span>':
+            linkedTasks.map(t => `<button type="button" class="doc-linked-task-link" data-task-id="${t.id}">${t.projectName?esc('['+t.projectName+'] '):''}${esc(t.title)}</button>`).join('')}
+        </div>
+      </div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;color:var(--c-text-muted);margin-bottom:4px">연결된 프로젝트${linkedProjects.length?` (${linkedProjects.length})`:''}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${linkedProjects.length===0?'<span style="font-size:11px;color:var(--c-text-muted)">-</span>':
+            linkedProjects.map(p => `<button type="button" class="doc-linked-project-link" data-project-id="${p.id}">${esc(p.code?p.code+' ':'')}${esc(p.name)}</button>`).join('')}
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--c-text-muted);font-family:monospace">코드: ${esc(d.hash||'-')}</div>
+    </div>`;
+  }
+  function bindDocLinkedTaskLinks(scopeSelector) {
+    document.querySelectorAll(`${scopeSelector} .doc-linked-task-link[data-task-id]`).forEach(b => b.addEventListener('click', e => {
+      e.stopPropagation();
+      showTaskModal(store.tasks[b.dataset.taskId]);
+    }));
+  }
+  function bindDocLinkedProjectLinks(scopeSelector) {
+    document.querySelectorAll(`${scopeSelector} .doc-linked-project-link[data-project-id]`).forEach(b => b.addEventListener('click', e => {
+      e.stopPropagation();
+      closeModal();
+      navigateTo('project-detail', b.dataset.projectId);
+    }));
+  }
+  function debounce(fn, delay) {
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
+  }
+  function bindDocFieldsEditable(scopeSelector) {
+    document.querySelectorAll(`${scopeSelector} .doc-field-edit[data-id]`).forEach(el => {
+      const persist = debounce(() => { saveLS(); saveConfig(); }, 400);
+      const save = () => {
+        const d = store.documents[el.dataset.id];
+        if (!d) return;
+        d[el.dataset.field] = el.value;
+        d.updatedAt = new Date().toISOString();
+        if (el.dataset.field === 'url') {
+          const link = document.querySelector(`.doc-open-link[data-id="${el.dataset.id}"]`);
+          if (link) { link.href = el.value || '#'; link.style.display = el.value ? '' : 'none'; }
+        }
+        persist();
+      };
+      el.addEventListener('input', save);
+      el.addEventListener('change', save);
+    });
+  }
+  function bindDocThumbEditable(scopeSelector, onSaved) {
+    document.querySelectorAll(`${scopeSelector} .doc-thumb-editable[data-id]`).forEach(el => {
+      el.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') return;
+        e.preventDefault();
+      });
+      el.addEventListener('paste', e => {
+        const got = readClipboardImage(e.clipboardData, dataUrl => {
+          const d = store.documents[el.dataset.id];
+          if (!d) return;
+          d.thumbnail = dataUrl;
+          d.updatedAt = new Date().toISOString();
+          saveLS(); saveConfig();
+          toast('썸네일이 등록되었습니다');
+          onSaved && onSaved();
+        });
+        e.preventDefault();
+        if (!got) toast('클립보드에 이미지가 없습니다');
+      });
+    });
+  }
+
+  // ─── CLIPBOARD PASTE: thumbnail image for a document ───
+  function readClipboardImage(clipboardData, callback) {
+    const items = clipboardData && clipboardData.items;
+    if (!items) return false;
+    for (const item of items) {
+      if (item.type && item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (!file) continue;
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const maxW = 320;
+            const scale = Math.min(1, maxW / img.width);
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.max(1, Math.round(img.width * scale));
+            canvas.height = Math.max(1, Math.round(img.height * scale));
+            canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+            callback(canvas.toDataURL('image/jpeg', 0.82));
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+        return true;
+      }
+    }
+    return false;
+  }
+  function setupThumbPasteZone(zoneId, previewWrapId, previewImgId, clearBtnId, initial) {
+    let thumb = initial || '';
+    const zone = document.getElementById(zoneId);
+    const wrap = document.getElementById(previewWrapId);
+    const img = document.getElementById(previewImgId);
+    const clearBtn = document.getElementById(clearBtnId);
+    if (thumb) { img.src = thumb; wrap.style.display = 'flex'; }
+    zone.addEventListener('paste', e => {
+      const got = readClipboardImage(e.clipboardData, dataUrl => {
+        thumb = dataUrl;
+        img.src = dataUrl;
+        wrap.style.display = 'flex';
+      });
+      if (got) e.preventDefault();
+    });
+    clearBtn.addEventListener('click', () => { thumb = ''; wrap.style.display = 'none'; img.src = ''; });
+    return { get: () => thumb };
+  }
+
+  // ─── DOC PANE (split view: task list + linked documents) ───
+  function openDocPane(taskId) { docPaneTaskId = taskId; docPaneExpandedId = null; navigateTo(currentPage, currentCtx); }
+  function closeDocPane() { docPaneTaskId = null; docPaneExpandedId = null; navigateTo(currentPage, currentCtx); }
+  function withDocPane(taskId, mainHtml) {
+    if (!taskId || !store.tasks[taskId]) return mainHtml;
+    return `<div class="split-layout"><div class="split-main">${mainHtml}</div><div class="doc-pane-col">${renderDocPaneHtml(taskId)}</div></div>`;
+  }
+  function renderDocPaneHtml(taskId) {
+    const t = store.tasks[taskId];
+    const docs = getTaskDocs(taskId);
+    return `<div class="card doc-pane">
+      <div class="doc-pane-header">
+        <div style="min-width:0">
+          <div class="doc-pane-label">연결된 자료</div>
+          <div class="doc-pane-title">${esc(t.title)}</div>
+        </div>
+        <div style="display:flex;gap:2px;flex-shrink:0">
+          <button class="btn-icon" id="addTaskDocBtn" title="새 자료 등록 후 연결">${ICONS.plus}</button>
+          <button class="btn-icon" id="closeDocPaneBtn" title="닫기">${ICONS.close}</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;padding:12px 16px;border-bottom:1px solid var(--c-border-light)">
+        <input class="form-input" id="taskDocHashInput" placeholder="다른 프로젝트 자료 연결 코드 입력" style="flex:1;font-size:12px;padding:6px 10px">
+        <button class="btn" id="taskDocHashLinkBtn" style="flex-shrink:0;font-size:12px;padding:6px 10px">연결</button>
+      </div>
+      <div id="taskDocList">${docs.length===0?'<div class="empty-state" style="padding:24px"><p>연결된 자료가 없습니다</p></div>':
+        docs.map(d => `<div>
+          <div class="doc-pane-item" data-id="${d.id}" style="cursor:pointer">
+            ${docThumbBoxHtml(d, 40)}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:500">${esc(d.title)}</div>
+              <div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                ${d.type==='mail'?'<span class="task-project-tag">메일 링크</span>':''}
+                ${d.category?`<span class="task-project-tag">${esc(d.category)}</span>`:''}
+                <span class="task-project-tag" style="font-family:monospace">코드: ${esc(d.hash||'-')}</span>
+              </div>
+            </div>
+            <div class="doc-item-actions" style="display:flex;gap:2px;flex-shrink:0">
+              ${d.url?`<a href="${esc(d.url)}" target="_blank" rel="noopener" class="btn-icon" title="열기">${d.type==='mail'?ICONS.mail:ICONS.openLink}</a>`:''}
+              <button class="btn-icon edit-task-doc" data-id="${d.id}" title="수정">${ICONS.edit}</button>
+              <button class="btn-icon btn-danger del-task-doc" data-id="${d.id}" title="연결 해제">${ICONS.trash}</button>
+            </div>
+          </div>
+          ${d.id===docPaneExpandedId?`<div style="background:var(--c-surface-alt);border-bottom:1px solid var(--c-border-light)">${docDetailExpandedHtml(d, taskId)}</div>`:''}
+        </div>`).join('')}</div>
+    </div>`;
+  }
+  function bindDocPaneEvents(taskId) {
+    if (!taskId || !store.tasks[taskId]) return;
+    document.getElementById('closeDocPaneBtn').addEventListener('click', closeDocPane);
+    document.getElementById('addTaskDocBtn').addEventListener('click', () => showDocModal(null, taskId));
+    document.querySelectorAll('.doc-pane-item[data-id]').forEach(row => row.addEventListener('click', e => {
+      if (e.target.closest('.doc-item-actions')) return;
+      docPaneExpandedId = docPaneExpandedId === row.dataset.id ? null : row.dataset.id;
+      navigateTo(currentPage, currentCtx);
+    }));
+    document.getElementById('taskDocHashLinkBtn').addEventListener('click', () => {
+      const inp = document.getElementById('taskDocHashInput');
+      const doc = findDocByHash(inp.value);
+      if (!doc) { toast('해당 코드의 자료를 찾을 수 없습니다'); return; }
+      if (!attachDocToTask(taskId, doc.id)) { toast('이미 연결된 자료입니다'); return; }
+      saveLS(); saveProjectTasks(store.tasks[taskId]?.projectId);
+      navigateTo(currentPage, currentCtx);
+      toast('자료가 연결되었습니다');
+    });
+    document.querySelectorAll('.edit-task-doc').forEach(b => b.addEventListener('click', () => showDocModal(store.documents[b.dataset.id])));
+    bindDocThumbEditable('.doc-pane', () => navigateTo(currentPage, currentCtx));
+    bindDocFieldsEditable('.doc-pane');
+    bindDocLinkedTaskLinks('.doc-pane');
+    bindDocLinkedProjectLinks('.doc-pane');
+    document.querySelectorAll('.del-task-doc').forEach(b => b.addEventListener('click', () => {
+      detachDocFromTask(taskId, b.dataset.id);
+      if (docPaneExpandedId === b.dataset.id) docPaneExpandedId = null;
+      saveLS(); saveProjectTasks(store.tasks[taskId]?.projectId);
+      navigateTo(currentPage, currentCtx);
+      toast('연결이 해제되었습니다');
+    }));
+  }
+
   // ─── DASHBOARD ───
   function renderDashboard() {
     const projects = vals('projects'), tasks = vals('tasks'), goals = vals('goals');
-    document.getElementById('pageContent').innerHTML = `
+    const totalLeaves = tasks.filter(t => !hasChildren(t.id)).length;
+    const doneLeaves = tasks.filter(t => !hasChildren(t.id) && t.status === '완료').length;
+
+    const dashboardMainHtml = `
       <div class="vision-banner">
         <div class="vision-label">Company Vision</div>
         <div class="vision-text">세상을 바꿔 나가는 비전솔루션 전문기업</div>
@@ -479,30 +1236,55 @@ body {
       <div class="stats-row">
         <div class="stat-tile"><div class="stat-label">프로젝트</div><div class="stat-value">${projects.length}</div></div>
         <div class="stat-tile"><div class="stat-label">전체 업무</div><div class="stat-value">${tasks.length}</div></div>
-        <div class="stat-tile"><div class="stat-label">진행중</div><div class="stat-value">${tasks.filter(t=>t.status==='진행중').length}</div></div>
+        <div class="stat-tile"><div class="stat-label">완료율</div><div class="stat-value">${totalLeaves?Math.round(doneLeaves/totalLeaves*100):0}%</div></div>
         <div class="stat-tile"><div class="stat-label">연간 목표</div><div class="stat-value">${goals.length}</div></div>
       </div>
-      <div class="section-divider">진행중인 프로젝트</div>
+      <div class="section-divider">프로젝트별 진행도</div>
       <div class="project-grid" id="dashProjects">${projects.length === 0 ? '<div class="empty-state" style="grid-column:1/-1"><p>등록된 프로젝트가 없습니다</p></div>' :
-        projects.map(p => `<div class="project-card" tabindex="0" data-id="${p.id}"><div class="project-code">${esc(p.code)}</div><div class="project-name">${esc(p.name)}</div><div class="project-desc">${esc(p.description||'').slice(0,100)}</div><div class="project-meta"><span class="status-badge ${statusClass(p.status)}">${statusLabel(p.status)}</span></div></div>`).join('')}</div>
+        projects.map(p => {
+          const prog = calcProjectProgress(p.id);
+          return `<div class="project-card" tabindex="0" data-id="${p.id}">
+            <div style="display:flex;gap:16px;align-items:center">
+              ${completionRingHtml(prog)}
+              <div style="flex:1;min-width:0">
+                <div class="project-code">${esc(p.code)}</div>
+                <div class="project-name">${esc(p.name)}</div>
+              </div>
+            </div>
+            <div class="project-desc">${esc(p.description||'').slice(0,100)}</div>
+            <div class="project-meta">
+              <span class="status-badge ${statusClass(p.status)}">${statusLabel(p.status)}</span>
+              ${progressBarHtml(prog)}
+            </div>
+          </div>`;
+        }).join('')}</div>
       <div class="section-divider">최근 업무</div>
       <div class="card"><div id="dashTasks">${tasks.length === 0 ? '<div class="empty-state" style="padding:24px"><p>등록된 업무가 없습니다</p></div>' :
-        tasks.slice(-5).reverse().map(t => `<div class="task-row"><input type="checkbox" class="task-checkbox" ${t.status==='완료'?'checked':''} data-id="${t.id}"><span>${esc(t.title)}</span><span class="task-project-tag">${esc(t.projectName||'-')}</span><span class="task-date">${t.dueDate||'-'}</span><span class="status-badge ${statusClass(t.status)}">${statusLabel(t.status)}</span><span></span></div>`).join('')}</div></div>
+        tasks.filter(t => !hasChildren(t.id)).slice(-5).reverse().map(t => `<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--c-border-light);font-size:13.5px"><input type="checkbox" class="task-checkbox" ${t.status==='완료'?'checked':''} data-id="${t.id}"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.title)}</span>${t.category?'<span class="category-badge">'+esc(t.category)+'</span>':''}<span class="task-project-tag">${esc(t.projectName||'-')}</span><span class="status-badge ${statusClass(t.status)}">${statusLabel(t.status)}</span><button class="btn-icon btn-view-docs view-task-docs" data-id="${t.id}" title="자료 보기">${ICONS.docs}</button></div>`).join('')}</div></div>
     `;
+    document.getElementById('pageContent').innerHTML = withDocPane(docPaneTaskId, dashboardMainHtml);
     document.querySelectorAll('#dashProjects .project-card').forEach(c => c.addEventListener('click', () => navigateTo('project-detail', c.dataset.id)));
-    document.querySelectorAll('#dashTasks .task-checkbox').forEach(cb => cb.addEventListener('change', () => { store.tasks[cb.dataset.id].status = cb.checked ? '완료' : '대기'; saveDB(store); renderDashboard(); }));
+    document.querySelectorAll('#dashTasks .task-checkbox').forEach(cb => cb.addEventListener('change', () => {
+      store.tasks[cb.dataset.id].status = cb.checked ? '완료' : '대기';
+      store.tasks[cb.dataset.id].updatedAt = new Date().toISOString();
+      updateParentStatus(cb.dataset.id);
+      saveLS(); saveProjectTasks(store.tasks[cb.dataset.id].projectId);
+      renderDashboard();
+    }));
+    document.querySelectorAll('#dashTasks .view-task-docs').forEach(b => b.addEventListener('click', () => openDocPane(b.dataset.id)));
+    bindDocPaneEvents(docPaneTaskId);
   }
 
   // ─── GOALS ───
   function renderGoals() {
-    const actions = document.getElementById('topbarActions');
-    actions.innerHTML = `<button class="btn btn-primary" id="addGoalBtn">${ICONS.plus} 목표 추가</button>`;
+    document.getElementById('topbarActions').innerHTML = `<button class="btn btn-primary" id="addGoalBtn">${ICONS.plus} 목표 추가</button>`;
     document.getElementById('addGoalBtn').addEventListener('click', () => showGoalModal());
     const goals = vals('goals');
     document.getElementById('pageContent').innerHTML = `<div class="card"><div id="goalList">${goals.length === 0 ? '<div class="empty-state"><p>등록된 연간 목표가 없습니다</p></div>' :
-      goals.map(g => `<div class="goal-item"><div class="goal-marker" style="background:${g.status==='완료'?'var(--c-success)':g.status==='진행중'?'var(--c-warning)':'var(--c-accent)'}"></div><div class="goal-content"><div class="goal-title">${esc(g.title)}</div><div class="goal-description">${esc(g.description||'')}</div><div style="margin-top:6px;display:flex;gap:8px;align-items:center"><span class="status-badge ${statusClass(g.status)}">${statusLabel(g.status)}</span><span style="font-size:11px;color:var(--c-text-muted)">${g.year||''}</span></div></div><div style="display:flex;gap:2px"><button class="btn-icon edit-goal" data-id="${g.id}">${ICONS.edit}</button><button class="btn-icon btn-danger del-goal" data-id="${g.id}">${ICONS.trash}</button></div></div>`).join('')}</div></div>`;
+      goals.map(g => { const prog = calcGoalProgress(g.id); return `<div class="goal-item"><div class="goal-marker" style="background:${g.status==='완료'?'var(--c-success)':g.status==='진행중'?'var(--c-warning)':'var(--c-accent)'}"></div><div class="goal-content"><div class="goal-title">${esc(g.title)}</div><div class="goal-description">${esc(g.description||'')}</div><div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="status-badge ${statusClass(g.status)}">${statusLabel(g.status)}</span><span style="font-size:11px;color:var(--c-text-muted)">${g.year||''}</span>${prog.total>0?`<span class="task-project-tag">업무 ${prog.done}/${prog.total} 완료 (${prog.pct}%)</span>`:''}</div></div><div style="display:flex;gap:2px"><button class="btn-icon add-goal-task" data-id="${g.id}" title="업무 추가">${ICONS.plus}</button><button class="btn-icon edit-goal" data-id="${g.id}">${ICONS.edit}</button><button class="btn-icon btn-danger del-goal" data-id="${g.id}">${ICONS.trash}</button></div></div>`; }).join('')}</div></div>`;
+    document.querySelectorAll('.add-goal-task').forEach(b => b.addEventListener('click', () => showTaskModal(null, null, null, b.dataset.id)));
     document.querySelectorAll('.edit-goal').forEach(b => b.addEventListener('click', () => showGoalModal(store.goals[b.dataset.id])));
-    document.querySelectorAll('.del-goal').forEach(b => b.addEventListener('click', () => { if(confirm('삭제하시겠습니까?')){ delete store.goals[b.dataset.id]; saveDB(store); renderGoals(); toast('삭제됨'); }}));
+    document.querySelectorAll('.del-goal').forEach(b => b.addEventListener('click', () => { if(confirm('삭제하시겠습니까?')){ delete store.goals[b.dataset.id]; saveLS(); saveConfig(); renderGoals(); toast('삭제됨'); }}));
   }
   function showGoalModal(ex) {
     const isEdit = !!ex;
@@ -518,7 +1300,7 @@ body {
       const title = document.getElementById('mGoalTitle').value.trim(); if (!title) { toast('목표명을 입력하세요'); return; }
       const id = ex?.id || uid();
       store.goals[id] = { id, title, description: document.getElementById('mGoalDesc').value.trim(), year: parseInt(document.getElementById('mGoalYear').value)||new Date().getFullYear(), status: document.getElementById('mGoalStatus').value, createdAt: ex?.createdAt||new Date().toISOString(), updatedAt: new Date().toISOString() };
-      saveDB(store); closeModal(); renderGoals(); toast(isEdit?'수정됨':'추가됨');
+      saveLS(); saveConfig(); closeModal(); renderGoals(); toast(isEdit?'수정됨':'추가됨');
     });
   }
 
@@ -528,15 +1310,49 @@ body {
     document.getElementById('addProjBtn').addEventListener('click', () => showProjectModal());
     const projects = vals('projects');
     document.getElementById('pageContent').innerHTML = `<div class="project-grid">${projects.length===0?'<div class="empty-state" style="grid-column:1/-1"><p>프로젝트가 없습니다</p></div>':
-      projects.map(p => `<div class="project-card" tabindex="0" data-id="${p.id}"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="project-code">${esc(p.code)}</div><div style="display:flex;gap:2px"><button class="btn-icon edit-proj" data-id="${p.id}">${ICONS.edit}</button><button class="btn-icon btn-danger del-proj" data-id="${p.id}">${ICONS.trash}</button></div></div><div class="project-name">${esc(p.name)}</div><div class="project-desc">${esc(p.description||'').slice(0,120)}</div><div class="project-meta"><span class="status-badge ${statusClass(p.status)}">${statusLabel(p.status)}</span><span>${p.startDate||'-'} ~ ${p.endDate||'-'}</span></div></div>`).join('')}</div>`;
-    document.querySelectorAll('.project-card').forEach(c => c.addEventListener('click', e => { if (!e.target.closest('.edit-proj,.del-proj')) navigateTo('project-detail', c.dataset.id); }));
+      projects.map(p => {
+        const prog = calcProjectProgress(p.id);
+        return `<div class="project-card" tabindex="0" data-id="${p.id}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div style="display:flex;gap:16px;align-items:center;flex:1;min-width:0">
+              ${completionRingHtml(prog, true)}
+              <div style="flex:1;min-width:0">
+                <div class="project-code">${esc(p.code)}</div>
+                <div class="project-name">${esc(p.name)}</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:2px;flex-shrink:0">
+              <button class="btn-icon proj-docs-btn" data-id="${p.id}" title="자료">${ICONS.docs}</button>
+              <button class="btn-icon edit-proj" data-id="${p.id}">${ICONS.edit}</button>
+              <button class="btn-icon btn-danger del-proj" data-id="${p.id}">${ICONS.trash}</button>
+            </div>
+          </div>
+          <div class="project-desc">${esc(p.description||'').slice(0,120)}</div>
+          <div class="project-meta">
+            <span class="status-badge ${statusClass(p.status)}">${statusLabel(p.status)}</span>
+            ${progressBarHtml(prog)}
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:var(--c-text-muted)">${p.startDate||'-'} ~ ${p.endDate||'-'}${p._folder ? ' · 📁 '+esc(p._folder) : ''}${getProjectDocs(p.id).length?' · 📎 자료 '+getProjectDocs(p.id).length+'개':''}</div>
+        </div>`;
+      }).join('')}</div>`;
+    document.querySelectorAll('.project-card').forEach(c => c.addEventListener('click', e => { if (!e.target.closest('.edit-proj,.del-proj,.proj-docs-btn')) navigateTo('project-detail', c.dataset.id); }));
+    document.querySelectorAll('.proj-docs-btn').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); showProjectDocsModal(store.projects[b.dataset.id]); }));
     document.querySelectorAll('.edit-proj').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); showProjectModal(store.projects[b.dataset.id]); }));
-    document.querySelectorAll('.del-proj').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); if(confirm('삭제하시겠습니까?')){ delete store.projects[b.dataset.id]; saveDB(store); renderProjects(); toast('삭제됨'); }}));
+    document.querySelectorAll('.del-proj').forEach(b => b.addEventListener('click', e => {
+      e.stopPropagation();
+      if(confirm('프로젝트와 관련 업무를 모두 삭제하시겠습니까?')){
+        // Delete associated tasks
+        for (const [id, t] of Object.entries(store.tasks)) { if (t.projectId === b.dataset.id) delete store.tasks[id]; }
+        delete store.projects[b.dataset.id];
+        saveLS(); saveProjectMeta(); saveConfig();
+        renderProjects(); toast('삭제됨');
+      }
+    }));
   }
   function showProjectModal(ex) {
     const isEdit = !!ex;
     openModal(isEdit?'프로젝트 수정':'프로젝트 추가', `
-      <div class="form-group"><label class="form-label">코드</label><input class="form-input" id="mProjCode" placeholder="PRJ-001" value="${esc(ex?.code||'')}"></div>
+      <div class="form-group"><label class="form-label">코드 *</label><input class="form-input" id="mProjCode" placeholder="PRJ-001" value="${esc(ex?.code||'')}"><div style="font-size:11px;color:var(--c-text-muted);margin-top:3px">폴더명으로 사용됩니다 (예: PRJ-001)</div></div>
       <div class="form-group"><label class="form-label">프로젝트명 *</label><input class="form-input" id="mProjName" value="${esc(ex?.name||'')}"></div>
       <div class="form-group"><label class="form-label">설명</label><textarea class="form-textarea" id="mProjDesc">${esc(ex?.description||'')}</textarea></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -547,9 +1363,234 @@ body {
       `<button class="btn" onclick="document.getElementById('modalOverlay').hidden=true">취소</button><button class="btn btn-primary" id="mProjSave">${isEdit?'수정':'추가'}</button>`);
     document.getElementById('mProjSave').addEventListener('click', () => {
       const name = document.getElementById('mProjName').value.trim(); if (!name) { toast('프로젝트명을 입력하세요'); return; }
+      const code = document.getElementById('mProjCode').value.trim(); if (!code) { toast('프로젝트 코드를 입력하세요'); return; }
       const id = ex?.id || uid();
-      store.projects[id] = { id, code: document.getElementById('mProjCode').value.trim(), name, description: document.getElementById('mProjDesc').value.trim(), startDate: document.getElementById('mProjStart').value, endDate: document.getElementById('mProjEnd').value, status: document.getElementById('mProjStatus').value, createdAt: ex?.createdAt||new Date().toISOString(), updatedAt: new Date().toISOString() };
-      saveDB(store); closeModal(); renderProjects(); toast(isEdit?'수정됨':'추가됨');
+      const folderName = ex?._folder || safeFolderName(code, name);
+      store.projects[id] = { id, code, name, description: document.getElementById('mProjDesc').value.trim(), startDate: document.getElementById('mProjStart').value, endDate: document.getElementById('mProjEnd').value, status: document.getElementById('mProjStatus').value, _folder: folderName, docIds: ex?.docIds || [], createdAt: ex?.createdAt||new Date().toISOString(), updatedAt: new Date().toISOString() };
+      saveLS(); saveProjectMeta(); saveProjectTasks(id);
+      closeModal(); renderProjects(); toast(isEdit?'수정됨':'추가됨');
+    });
+  }
+
+  // 프로젝트 상세 페이지에 인라인으로 표시되는 "관련 자료" 섹션 — 설명과 업무 목록 사이
+  function renderProjectDocsSectionHtml(project) {
+    const docs = getProjectDocs(project.id);
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 16px">
+        <div class="section-divider" style="margin:0;flex:1">관련 자료</div>
+        <button class="btn btn-primary" id="pdAddDocBtn" style="flex-shrink:0">${ICONS.plus} 자료 추가</button>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <div style="display:flex;gap:6px;padding:12px 16px;border-bottom:1px solid var(--c-border-light)">
+          <input class="form-input" id="pdDocHash" placeholder="다른 프로젝트/업무 자료 연결 코드 입력 (예: 3F9K2A)" style="flex:1;font-size:12px;padding:6px 10px">
+          <button class="btn" id="pdDocLinkBtn" style="flex-shrink:0;font-size:12px;padding:6px 10px">연결</button>
+        </div>
+        ${projDocFormOpen?`<div style="padding:12px 16px;border-bottom:1px solid var(--c-border-light)">
+          <div class="form-group" style="margin-bottom:8px">
+            <div class="doc-type-toggle">
+              <button type="button" class="btn active" id="pdDocTypeFile" data-type="file">📎 자료</button>
+              <button type="button" class="btn" id="pdDocTypeMail" data-type="mail">📧 메일 링크</button>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:8px"><input class="form-input" id="pdDocNewTitle" placeholder="자료명 (메일 링크는 선택)"></div>
+          <div class="form-group" style="margin-bottom:8px"><input class="form-input" id="pdDocNewUrl" placeholder="링크 (URL)"></div>
+          <div class="form-group" style="margin-bottom:0">
+            <div class="thumb-paste-zone" id="pdDocNewThumbZone" contenteditable="true" data-placeholder="썸네일 이미지를 복사한 후 여기를 클릭하고 Ctrl+V로 붙여넣기"></div>
+            <div id="pdDocNewThumbWrap" style="display:none;margin-top:6px;align-items:center;gap:8px">
+              <img id="pdDocNewThumbImg" style="width:56px;height:56px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--c-border)" alt="">
+              <button type="button" class="btn" id="pdDocNewThumbClear" style="font-size:11px;padding:3px 8px">제거</button>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" id="pdDocNewSave" style="font-size:12px;padding:5px 10px;margin-top:10px">추가</button>
+          <button type="button" class="btn" id="pdDocNewCancel" style="font-size:12px;padding:5px 10px;margin-top:10px">취소</button>
+        </div>`:''}
+        <div id="pdDocList">${docs.length===0?'<div class="empty-state" style="padding:20px"><p>연결된 자료가 없습니다</p></div>':
+          docs.map(d => `<div>
+            <div class="doc-list-item-row" data-id="${d.id}" style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--c-border-light);cursor:pointer">
+              ${docThumbBoxHtml(d, 40)}
+              <div style="flex:1;min-width:0">
+                <div style="font-size:13px;font-weight:500">${esc(d.title)}</div>
+                <div style="margin-top:5px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                  ${d.type==='mail'?'<span class="task-project-tag">메일 링크</span>':''}
+                  ${d.category?`<span class="task-project-tag">${esc(d.category)}</span>`:''}
+                  <span class="task-project-tag" style="font-family:monospace">코드: ${esc(d.hash||'-')}</span>
+                </div>
+              </div>
+              ${d.url?`<a href="${esc(d.url)}" target="_blank" rel="noopener" class="btn-icon doc-item-actions" title="열기">${d.type==='mail'?ICONS.mail:ICONS.openLink}</a>`:''}
+              <button type="button" class="btn-icon btn-danger doc-item-actions pdDocRemove" data-id="${d.id}" title="연결 해제">${ICONS.trash}</button>
+            </div>
+            ${d.id===projDocExpandedId?`<div style="background:var(--c-surface-alt);border-bottom:1px solid var(--c-border-light)">${docDetailExpandedHtml(d, null, project.id)}</div>`:''}
+          </div>`).join('')}</div>
+      </div>
+    `;
+  }
+  function bindProjectDocsSection(project) {
+    const refresh = () => renderProjectDetail(project.id);
+    document.getElementById('pdAddDocBtn').addEventListener('click', () => { projDocFormOpen = true; refresh(); });
+    document.querySelectorAll('#pdDocList .doc-list-item-row[data-id]').forEach(row => row.addEventListener('click', e => {
+      if (e.target.closest('.doc-item-actions')) return;
+      projDocExpandedId = projDocExpandedId === row.dataset.id ? null : row.dataset.id;
+      refresh();
+    }));
+    document.querySelectorAll('.pdDocRemove').forEach(b => b.addEventListener('click', () => {
+      detachDocFromProject(project.id, b.dataset.id);
+      if (projDocExpandedId === b.dataset.id) projDocExpandedId = null;
+      saveLS(); saveProjectMeta();
+      refresh();
+    }));
+    document.getElementById('pdDocLinkBtn').addEventListener('click', () => {
+      const inp = document.getElementById('pdDocHash');
+      if (!inp.value.trim()) return;
+      const doc = findDocByHash(inp.value);
+      if (!doc) { toast('해당 코드의 자료를 찾을 수 없습니다'); return; }
+      if (!attachDocToProject(project.id, doc.id)) { toast('이미 연결된 자료입니다'); return; }
+      saveLS(); saveProjectMeta();
+      toast('자료가 연결되었습니다');
+      refresh();
+    });
+    bindDocThumbEditable('#pdDocList', refresh);
+    bindDocFieldsEditable('#pdDocList');
+    bindDocLinkedTaskLinks('#pdDocList');
+    bindDocLinkedProjectLinks('#pdDocList');
+    if (!projDocFormOpen) return;
+    let newDocType = 'file';
+    const typeFileBtn = document.getElementById('pdDocTypeFile');
+    const typeMailBtn = document.getElementById('pdDocTypeMail');
+    typeFileBtn.addEventListener('click', () => { newDocType = 'file'; typeFileBtn.classList.add('active'); typeMailBtn.classList.remove('active'); });
+    typeMailBtn.addEventListener('click', () => { newDocType = 'mail'; typeMailBtn.classList.add('active'); typeFileBtn.classList.remove('active'); });
+    const newDocThumb = setupThumbPasteZone('pdDocNewThumbZone', 'pdDocNewThumbWrap', 'pdDocNewThumbImg', 'pdDocNewThumbClear');
+    document.getElementById('pdDocNewCancel').addEventListener('click', () => { projDocFormOpen = false; refresh(); });
+    document.getElementById('pdDocNewSave').addEventListener('click', () => {
+      const dTitleRaw = document.getElementById('pdDocNewTitle').value.trim();
+      const dUrl = document.getElementById('pdDocNewUrl').value.trim();
+      if (newDocType === 'mail' && !dUrl) { toast('메일 링크 URL을 입력하세요'); return; }
+      if (newDocType === 'file' && !dTitleRaw) { toast('자료명을 입력하세요'); return; }
+      const did = uid();
+      store.documents[did] = { id: did, hash: genDocHash(), title: dTitleRaw || (newDocType === 'mail' ? '메일 링크' : ''), type: newDocType, category: '', description: '', url: dUrl, thumbnail: newDocThumb.get(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+      attachDocToProject(project.id, did);
+      saveLS(); saveConfig(); saveProjectMeta();
+      projDocFormOpen = false;
+      toast('자료가 추가되었습니다');
+      refresh();
+    });
+  }
+
+  // 프로젝트에 연결된 자료 관리 — 업무 모달의 "관련 자료" 섹션과 동일한 패턴
+  function showProjectDocsModal(project) {
+    if (!project) return;
+    openModal(`프로젝트 자료 — ${esc(project.name)}`, `
+      <div id="pDocList" style="margin-bottom:8px"></div>
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <input class="form-input" id="pDocHash" placeholder="다른 프로젝트/업무 자료 연결 코드 입력 (예: 3F9K2A)" style="flex:1">
+        <button type="button" class="btn" id="pDocLinkBtn" style="flex-shrink:0">연결</button>
+      </div>
+      <div id="pDocNewForm" style="display:none;border:1px dashed var(--c-border);border-radius:var(--radius-sm);padding:10px;margin-top:6px">
+        <div class="form-group" style="margin-bottom:8px">
+          <div class="doc-type-toggle">
+            <button type="button" class="btn active" id="pDocTypeFile" data-type="file">📎 자료</button>
+            <button type="button" class="btn" id="pDocTypeMail" data-type="mail">📧 메일 링크</button>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:8px"><input class="form-input" id="pDocNewTitle" placeholder="자료명 (메일 링크는 선택)"></div>
+        <div class="form-group" style="margin-bottom:8px"><input class="form-input" id="pDocNewUrl" placeholder="링크 (URL)"></div>
+        <div class="form-group" style="margin-bottom:0">
+          <div class="thumb-paste-zone" id="pDocNewThumbZone" contenteditable="true" data-placeholder="썸네일 이미지를 복사한 후 여기를 클릭하고 Ctrl+V로 붙여넣기"></div>
+          <div id="pDocNewThumbWrap" style="display:none;margin-top:6px;align-items:center;gap:8px">
+            <img id="pDocNewThumbImg" style="width:56px;height:56px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--c-border)" alt="">
+            <button type="button" class="btn" id="pDocNewThumbClear" style="font-size:11px;padding:3px 8px">제거</button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" id="pDocNewSave" style="font-size:12px;padding:5px 10px;margin-top:10px">추가</button>
+        <button type="button" class="btn" id="pDocNewCancel" style="font-size:12px;padding:5px 10px;margin-top:10px">취소</button>
+      </div>
+      <button type="button" class="btn" id="pDocAddBtn" style="font-size:12px;padding:5px 10px;margin-top:6px">${ICONS.plus} 새 자료 등록</button>
+      <div style="font-size:11px;color:var(--c-text-muted);margin-top:6px">이 프로젝트에 등록된 자료입니다. 코드를 다른 업무/프로젝트에 입력하면 함께 연결해 볼 수 있습니다</div>`,
+      `<button class="btn" id="pDocCloseBtn">닫기</button>`);
+    document.getElementById('pDocCloseBtn').addEventListener('click', () => {
+      closeModal();
+      if (currentPage === 'projects') renderProjects();
+      else if (currentPage === 'project-detail' && currentCtx) renderProjectDetail(currentCtx);
+    });
+
+    let docIdsWorking = project.docIds?.length ? [...project.docIds] : [];
+    let expandedId = null;
+    function renderList() {
+      const wrap = document.getElementById('pDocList');
+      const docs = docIdsWorking.map(id => store.documents[id]).filter(Boolean);
+      wrap.innerHTML = docs.length === 0 ? '<div style="font-size:12px;color:var(--c-text-muted)">연결된 자료가 없습니다</div>' :
+        docs.map(d => `<div style="border:1px solid var(--c-border-light);border-radius:var(--radius-sm);margin-bottom:6px;overflow:hidden">
+          <div class="doc-list-item-row" data-id="${d.id}" style="display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer">
+            ${docThumbBoxHtml(d, 32)}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.title)}</div>
+              <div style="font-size:10.5px;color:var(--c-text-muted);font-family:monospace">코드: ${esc(d.hash||'-')}</div>
+            </div>
+            ${d.url?`<a href="${esc(d.url)}" target="_blank" rel="noopener" class="btn-icon doc-item-actions" title="열기" onclick="event.stopPropagation()">${d.type==='mail'?ICONS.mail:ICONS.openLink}</a>`:''}
+            <button type="button" class="btn-icon btn-danger doc-item-actions pDocRemove" data-id="${d.id}" title="연결 해제">${ICONS.trash}</button>
+          </div>
+          ${d.id===expandedId?`<div style="background:var(--c-surface-alt);border-top:1px solid var(--c-border-light)">${docDetailExpandedHtml(d, null, project.id)}</div>`:''}
+        </div>`).join('');
+      wrap.querySelectorAll('.doc-list-item-row[data-id]').forEach(row => row.addEventListener('click', e => {
+        if (e.target.closest('.doc-item-actions')) return;
+        expandedId = expandedId === row.dataset.id ? null : row.dataset.id;
+        renderList();
+      }));
+      wrap.querySelectorAll('.pDocRemove').forEach(b => b.addEventListener('click', () => {
+        docIdsWorking = docIdsWorking.filter(id => id !== b.dataset.id);
+        if (expandedId === b.dataset.id) expandedId = null;
+        commit();
+        renderList();
+      }));
+      bindDocThumbEditable('#pDocList', () => { commit(); renderList(); });
+      bindDocFieldsEditable('#pDocList');
+      bindDocLinkedTaskLinks('#pDocList');
+      bindDocLinkedProjectLinks('#pDocList');
+    }
+    function commit() {
+      project.docIds = docIdsWorking;
+      project.updatedAt = new Date().toISOString();
+      saveLS(); saveProjectMeta();
+    }
+    renderList();
+    document.getElementById('pDocLinkBtn').addEventListener('click', () => {
+      const inp = document.getElementById('pDocHash');
+      if (!inp.value.trim()) return;
+      const doc = findDocByHash(inp.value);
+      if (!doc) { toast('해당 코드의 자료를 찾을 수 없습니다'); return; }
+      if (docIdsWorking.includes(doc.id)) { toast('이미 연결된 자료입니다'); return; }
+      docIdsWorking.push(doc.id);
+      inp.value = '';
+      commit();
+      renderList();
+      toast('자료가 연결되었습니다');
+    });
+    let newDocType = 'file';
+    const typeFileBtn = document.getElementById('pDocTypeFile');
+    const typeMailBtn = document.getElementById('pDocTypeMail');
+    typeFileBtn.addEventListener('click', () => { newDocType = 'file'; typeFileBtn.classList.add('active'); typeMailBtn.classList.remove('active'); });
+    typeMailBtn.addEventListener('click', () => { newDocType = 'mail'; typeMailBtn.classList.add('active'); typeFileBtn.classList.remove('active'); });
+    const newDocThumb = setupThumbPasteZone('pDocNewThumbZone', 'pDocNewThumbWrap', 'pDocNewThumbImg', 'pDocNewThumbClear');
+    document.getElementById('pDocAddBtn').addEventListener('click', () => { document.getElementById('pDocNewForm').style.display = ''; });
+    document.getElementById('pDocNewCancel').addEventListener('click', () => {
+      document.getElementById('pDocNewForm').style.display = 'none';
+      document.getElementById('pDocNewTitle').value = '';
+      document.getElementById('pDocNewUrl').value = '';
+    });
+    document.getElementById('pDocNewSave').addEventListener('click', () => {
+      const dTitleRaw = document.getElementById('pDocNewTitle').value.trim();
+      const dUrl = document.getElementById('pDocNewUrl').value.trim();
+      if (newDocType === 'mail' && !dUrl) { toast('메일 링크 URL을 입력하세요'); return; }
+      if (newDocType === 'file' && !dTitleRaw) { toast('자료명을 입력하세요'); return; }
+      const did = uid();
+      store.documents[did] = { id: did, hash: genDocHash(), title: dTitleRaw || (newDocType === 'mail' ? '메일 링크' : ''), type: newDocType, category: '', description: '', url: dUrl, thumbnail: newDocThumb.get(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+      saveConfig();
+      docIdsWorking.push(did);
+      document.getElementById('pDocNewTitle').value = '';
+      document.getElementById('pDocNewUrl').value = '';
+      document.getElementById('pDocNewForm').style.display = 'none';
+      commit();
+      renderList();
+      toast('자료가 추가되었습니다');
     });
   }
 
@@ -557,98 +1598,934 @@ body {
   function renderProjectDetail(pid) {
     const p = store.projects[pid];
     if (!p) { navigateTo('projects'); return; }
+    const prog = calcProjectProgress(pid);
     document.getElementById('pageTitle').textContent = p.name;
-    document.getElementById('topbarActions').innerHTML = `<button class="btn" id="backBtn">${ICONS.back} 목록으로</button><button class="btn btn-primary" id="addTaskForProj">${ICONS.plus} 업무 추가</button>`;
+    document.getElementById('topbarActions').innerHTML = `<button class="btn" id="backBtn">${ICONS.back} 목록으로</button>`;
     document.getElementById('backBtn').addEventListener('click', () => navigateTo('projects'));
+    const projTasks = vals('tasks').filter(t => t.projectId === pid);
+    const tree = buildTaskTree(projTasks, null, 0);
+    const projPurchaseTotal = projTasks.reduce((s, t) => s + getPurchaseTotal(t), 0);
+    const projPurchaseSpent = projTasks.reduce((s, t) => s + getPurchaseSpent(t), 0);
+    const projMainHtml = `
+      <div class="detail-panel">
+        <div class="detail-header">
+          <div style="display:flex;gap:16px;align-items:center;flex:1;min-width:0">
+            ${completionRingHtml(prog, true)}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:11px;color:var(--c-accent);font-weight:600;margin-bottom:4px">${esc(p.code)}</div>
+              <div class="detail-title">${esc(p.name)}</div>
+            </div>
+          </div>
+          <span class="status-badge ${statusClass(p.status)}">${statusLabel(p.status)}</span>
+        </div>
+        <div class="detail-body">
+          ${p.description?`<p style="font-size:13.5px;color:var(--c-text-secondary);margin-bottom:16px;line-height:1.6">${esc(p.description)}</p>`:''}
+          <div style="margin-bottom:16px">${progressBarHtml(prog, 'progress-lg')}</div>
+          <div class="detail-meta">
+            <div><div class="detail-field-label">시작일</div><div class="detail-field-value">${p.startDate||'-'}</div></div>
+            <div><div class="detail-field-label">종료일</div><div class="detail-field-value">${p.endDate||'-'}</div></div>
+            <div><div class="detail-field-label">전체 업무</div><div class="detail-field-value">${projTasks.length}개 (리프 ${prog.total}개)</div></div>
+            <div><div class="detail-field-label">폴더</div><div class="detail-field-value">${p._folder ? '📁 '+esc(p._folder) : '-'}</div></div>
+            ${projPurchaseTotal>0?`<div><div class="detail-field-label">🛒 구매 지출액 / 총 예정 금액</div><div class="detail-field-value" style="color:var(--c-primary);font-weight:600">${fmtWon(projPurchaseSpent)} <span style="color:var(--c-text-muted);font-weight:500">/ ${fmtWon(projPurchaseTotal)}</span></div></div>`:''}
+          </div>
+        </div>
+      </div>
+      ${renderProjectDocsSectionHtml(p)}
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 16px">
+        <div class="section-divider" style="margin:0;flex:1">업무 목록</div>
+        <button class="btn btn-primary" id="addTaskForProj" style="flex-shrink:0">${ICONS.plus} 업무 추가</button>
+      </div>
+      <div class="card"><div id="projTaskList">${tree.length===0?'<div class="empty-state" style="padding:24px"><p>등록된 업무가 없습니다</p></div>':
+        renderTaskTreeRows(tree, pid)}</div></div>
+    `;
+    document.getElementById('pageContent').innerHTML = withDocPane(docPaneTaskId, projMainHtml);
     document.getElementById('addTaskForProj').addEventListener('click', () => showTaskModal(null, pid));
-    const tasks = vals('tasks').filter(t => t.projectId === pid);
-    document.getElementById('pageContent').innerHTML = `
-      <div class="detail-panel"><div class="detail-header"><div><div style="font-size:11px;color:var(--c-accent);font-weight:600;margin-bottom:4px">${esc(p.code)}</div><div class="detail-title">${esc(p.name)}</div></div><span class="status-badge ${statusClass(p.status)}">${statusLabel(p.status)}</span></div><div class="detail-body">${p.description?`<p style="font-size:13.5px;color:var(--c-text-secondary);margin-bottom:16px;line-height:1.6">${esc(p.description)}</p>`:''}<div class="detail-meta"><div><div class="detail-field-label">시작일</div><div class="detail-field-value">${p.startDate||'-'}</div></div><div><div class="detail-field-label">종료일</div><div class="detail-field-value">${p.endDate||'-'}</div></div><div><div class="detail-field-label">등록일</div><div class="detail-field-value">${p.createdAt?p.createdAt.slice(0,10):'-'}</div></div></div></div></div>
-      <div class="section-divider">프로젝트 업무</div>
-      <div class="card"><div id="projTaskList">${tasks.length===0?'<div class="empty-state" style="padding:24px"><p>등록된 업무가 없습니다</p></div>':
-        '<div class="task-row task-row-header"><span></span><span>업무명</span><span>담당</span><span>마감일</span><span>상태</span><span></span></div>'+tasks.map(t=>`<div class="task-row"><input type="checkbox" class="task-checkbox" ${t.status==='완료'?'checked':''} data-id="${t.id}"><span>${esc(t.title)}</span><span style="font-size:12px;color:var(--c-text-secondary)">${esc(t.assignee||'-')}</span><span class="task-date">${t.dueDate||'-'}</span><span class="status-badge ${statusClass(t.status)}">${statusLabel(t.status)}</span><span class="task-actions"><button class="btn-icon edit-task" data-id="${t.id}">${ICONS.edit}</button><button class="btn-icon btn-danger del-task" data-id="${t.id}">${ICONS.trash}</button></span></div>`).join('')}</div></div>`;
+    bindProjectDocsSection(p);
     bindTaskEvents(pid);
-  }
-  function bindTaskEvents(ctxPid) {
-    document.querySelectorAll('.task-checkbox').forEach(cb => cb.addEventListener('change', () => { store.tasks[cb.dataset.id].status = cb.checked?'완료':'대기'; saveDB(store); if(ctxPid) renderProjectDetail(ctxPid); else renderTasks(); }));
-    document.querySelectorAll('.edit-task').forEach(b => b.addEventListener('click', () => showTaskModal(store.tasks[b.dataset.id], ctxPid)));
-    document.querySelectorAll('.del-task').forEach(b => b.addEventListener('click', () => { if(confirm('삭제하시겠습니까?')){ delete store.tasks[b.dataset.id]; saveDB(store); if(ctxPid) renderProjectDetail(ctxPid); else renderTasks(); toast('삭제됨'); }}));
+    bindDocPaneEvents(docPaneTaskId);
   }
 
-  // ─── TASKS ───
+  // ─── TASK TREE RENDERING ───
+  // Brief inline detail shown when a task's name is clicked — mirrors the purchase-record expand pattern.
+  function taskDetailExpandedHtml(t) {
+    const isParent = hasChildren(t.id);
+    const prog = isParent ? calcTaskProgress(t.id) : null;
+    return `<div style="padding:12px 16px 14px;background:var(--c-surface-alt);border-bottom:1px solid var(--c-border-light)">
+      <div class="detail-meta" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">
+        ${t.projectName?`<div><div class="detail-field-label">프로젝트</div><div class="detail-field-value">${esc(t.projectName)}</div></div>`:''}
+        <div><div class="detail-field-label">담당자</div><div class="detail-field-value">${esc(t.assignee||'-')}</div></div>
+        <div><div class="detail-field-label">카테고리</div><div class="detail-field-value">${esc(t.category||'-')}</div></div>
+        <div><div class="detail-field-label">우선순위</div><div class="detail-field-value">${esc(t.priority||'-')}</div></div>
+        <div><div class="detail-field-label">마감일</div><div class="detail-field-value">${t.dueDate||'-'}</div></div>
+        ${prog?`<div><div class="detail-field-label">하위 진행률</div><div class="detail-field-value">${prog.done}/${prog.total} (${prog.pct}%)</div></div>`:''}
+      </div>
+      ${t.description?`<div style="margin-top:8px;font-size:12px;color:var(--c-text-secondary)">${esc(t.description)}</div>`:''}
+      ${t.category==='구매'&&getPurchaseTotal(t)>0?`<div style="margin-top:8px;font-size:12px">🛒 지출 <b style="color:var(--c-primary)">${fmtWon(getPurchaseSpent(t))}</b> / 총 <b>${fmtWon(getPurchaseTotal(t))}</b></div>`:''}
+      ${t.category==='회의'&&(t.meetingLocation||t.meetingDate)?`<div style="margin-top:8px;font-size:12px">🗓️ ${esc(t.meetingLocation||'-')} · ${t.meetingDate||'-'}</div>`:''}
+      <button type="button" class="btn btn-primary task-detail-edit" data-id="${t.id}" style="margin-top:10px;font-size:12px;padding:6px 12px">${ICONS.edit} 업무 수정</button>
+    </div>`;
+  }
+  function renderTaskTreeRows(tree, ctxPid) {
+    let html = `<div class="task-tree-row header-row"><span></span><span>업무명</span><span>카테고리</span><span>마감일</span><span>진척도</span><span>상태</span><span></span></div>`;
+    for (const t of tree) {
+      const isParent = hasChildren(t.id);
+      const prog = isParent ? calcTaskProgress(t.id) : null;
+      const indent = Array(t._depth).fill('<span class="task-indent-line"></span>').join('');
+      html += `<div class="task-tree-row${t.id===selectedTaskId?' selected':''}" data-id="${t.id}">
+        <span><input type="checkbox" class="task-checkbox" ${t.status==='완료'?'checked':''} data-id="${t.id}"></span>
+        <span class="task-title-cell">
+          <span class="task-indent">${indent}</span>
+          <span class="task-title-text" data-id="${t.id}" title="클릭: 간략히 보기 · 더블클릭: 편집">${esc(t.title)}</span>
+          ${isParent ? `<span class="task-child-count">${getChildren(t.id).length}</span>` : ''}
+        </span>
+        <span>${t.category ? `<span class="category-badge">${esc(t.category)}</span>` : ''}</span>
+        <span class="task-date">${t.dueDate||'-'}</span>
+        <span>${prog ? progressMiniHtml(prog) : (t.category==='구매' && getPurchaseTotal(t)>0 ? `<span style="font-size:11.5px;font-weight:600;color:var(--c-text-secondary)" title="지출액 / 총 구매 금액">${fmtWon(getPurchaseSpent(t))} / ${fmtWon(getPurchaseTotal(t))}</span>` : '')}</span>
+        <span class="status-badge ${statusClass(t.status)}">${statusLabel(t.status)}</span>
+        <span class="task-actions">
+          <button class="btn-icon btn-view-docs view-task-docs" data-id="${t.id}" title="자료 보기">${ICONS.docs}</button>
+          <button class="btn-icon add-sub-task" data-id="${t.id}" data-proj="${t.projectId||''}" title="하위업무 추가">${ICONS.sub}</button>
+          <button class="btn-icon edit-task" data-id="${t.id}">${ICONS.edit}</button>
+          <button class="btn-icon btn-danger del-task" data-id="${t.id}">${ICONS.trash}</button>
+        </span>
+      </div>`;
+      if (t.id === expandedTaskId) html += taskDetailExpandedHtml(t);
+    }
+    return html;
+  }
+
+  function bindTaskEvents(ctxPid) {
+    const refresh = () => { if(ctxPid) renderProjectDetail(ctxPid); else renderTasks(); };
+    // Row click: select + toggle a brief inline detail (like the purchase history expand)
+    document.querySelectorAll('.task-tree-row[data-id]').forEach(row => row.addEventListener('click', e => {
+      if (e.target.closest('.task-actions, .task-checkbox')) return;
+      selectedTaskId = row.dataset.id;
+      expandedTaskId = expandedTaskId === row.dataset.id ? null : row.dataset.id;
+      refresh();
+    }));
+    document.querySelectorAll('.task-detail-edit').forEach(b => b.addEventListener('click', e => {
+      e.stopPropagation();
+      showTaskModal(store.tasks[b.dataset.id], ctxPid);
+    }));
+    // Checkbox
+    document.querySelectorAll('.task-checkbox').forEach(cb => cb.addEventListener('change', () => {
+      const t = store.tasks[cb.dataset.id];
+      t.status = cb.checked ? '완료' : '대기';
+      t.updatedAt = new Date().toISOString();
+      updateParentStatus(cb.dataset.id);
+      saveLS(); saveProjectTasks(t.projectId);
+      refresh();
+    }));
+    // Double-click anywhere on the row to edit
+    document.querySelectorAll('.task-tree-row[data-id]').forEach(row => row.addEventListener('dblclick', e => {
+      if (e.target.closest('.task-actions, .task-checkbox')) return;
+      e.preventDefault();
+      showTaskModal(store.tasks[row.dataset.id], ctxPid);
+    }));
+    // Edit button
+    document.querySelectorAll('.edit-task').forEach(b => b.addEventListener('click', () => showTaskModal(store.tasks[b.dataset.id], ctxPid)));
+    // Sub-task button
+    document.querySelectorAll('.add-sub-task').forEach(b => b.addEventListener('click', () => {
+      showTaskModal(null, b.dataset.proj || ctxPid, b.dataset.id);
+    }));
+    // View linked documents (split pane)
+    document.querySelectorAll('.view-task-docs').forEach(b => b.addEventListener('click', () => openDocPane(b.dataset.id)));
+    // Delete
+    document.querySelectorAll('.del-task').forEach(b => b.addEventListener('click', () => {
+      const descendants = getDescendantIds(b.dataset.id);
+      const msg = descendants.length > 0 ? `이 업무와 하위 업무 ${descendants.length}개를 모두 삭제하시겠습니까?` : '삭제하시겠습니까?';
+      if(confirm(msg)){
+        const t = store.tasks[b.dataset.id];
+        const pid = t?.projectId;
+        descendants.forEach(id => delete store.tasks[id]);
+        delete store.tasks[b.dataset.id];
+        saveLS(); saveProjectTasks(pid);
+        refresh(); toast('삭제됨');
+      }
+    }));
+  }
+
+  // ─── TASKS (all) ───
+  const PRIORITIES = ['높음', '보통', '낮음'];
+  function renderPriorityGroupsHtml(allTasks) {
+    const todoLeaves = allTasks.filter(t => !hasChildren(t.id) && t.status !== '완료');
+    return PRIORITIES.map(p => {
+      const group = todoLeaves.filter(t => (t.priority || '보통') === p)
+        .sort((a, b) => (a.dueDate || '9999-99-99').localeCompare(b.dueDate || '9999-99-99'))
+        .map(t => ({ ...t, _depth: 0 }));
+      return `<div class="section-divider">${p} 우선순위 <span style="font-weight:400;color:var(--c-text-muted)">${group.length}건</span></div>
+        <div class="card"><div>${group.length === 0 ? '<div class="empty-state" style="padding:20px"><p>해당 업무가 없습니다</p></div>' :
+          renderTaskTreeRows(group, null)}</div></div>`;
+    }).join('');
+  }
   function renderTasks(filter) {
     filter = filter || 'all';
-    document.getElementById('topbarActions').innerHTML = `<button class="btn btn-primary" id="addTaskBtn">${ICONS.plus} 업무 추가</button>`;
-    document.getElementById('addTaskBtn').addEventListener('click', () => showTaskModal());
     const all = vals('tasks');
-    const filtered = filter === 'all' ? all : all.filter(t => t.status === filter);
-    document.getElementById('pageContent').innerHTML = `
-      <div class="tab-bar" id="taskTabs">
-        <button class="tab-item ${filter==='all'?'active':''}" data-filter="all">전체</button>
-        <button class="tab-item ${filter==='대기'?'active':''}" data-filter="대기">대기</button>
-        <button class="tab-item ${filter==='진행중'?'active':''}" data-filter="진행중">진행중</button>
-        <button class="tab-item ${filter==='완료'?'active':''}" data-filter="완료">완료</button>
+    let bodyHtml;
+    if (filter === 'priority') {
+      bodyHtml = renderPriorityGroupsHtml(all);
+    } else {
+      let filtered;
+      if (filter === 'all') filtered = all;
+      else if (CATEGORIES.includes(filter)) filtered = all.filter(t => t.category === filter);
+      else filtered = all.filter(t => t.status === filter);
+
+      const filteredIds = new Set(filtered.map(t => t.id));
+      const adjustedTasks = filtered.map(t => (t.parentTaskId && !filteredIds.has(t.parentTaskId)) ? { ...t, parentTaskId: null } : t);
+      const finalTree = buildTaskTree(adjustedTasks, null, 0);
+      bodyHtml = `<div class="card"><div id="allTaskList">${finalTree.length===0?'<div class="empty-state" style="padding:24px"><p>해당 업무가 없습니다</p></div>':
+        renderTaskTreeRows(finalTree, null)}</div></div>`;
+      const purchaseTotal = filtered.reduce((s, t) => s + getPurchaseTotal(t), 0);
+      const purchaseSpent = filtered.reduce((s, t) => s + getPurchaseSpent(t), 0);
+      if (purchaseTotal > 0) {
+        bodyHtml = `<div class="card" style="margin-bottom:14px;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <span style="font-size:13px;font-weight:600;color:var(--c-text-secondary)">🛒 구매 지출액 / 총 예정 금액</span>
+          <span style="font-size:18px;font-weight:700;color:var(--c-primary)">${fmtWon(purchaseSpent)} <span style="font-size:13px;font-weight:500;color:var(--c-text-muted)">/ ${fmtWon(purchaseTotal)}</span></span>
+        </div>` + bodyHtml;
+      }
+    }
+
+    const tasksMainHtml = `
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+        <div class="tab-bar" id="taskTabs" style="flex:1;min-width:220px;margin-bottom:0">
+          <button class="tab-item ${filter==='all'?'active':''}" data-filter="all">전체</button>
+          <button class="tab-item ${filter==='대기'?'active':''}" data-filter="대기">대기</button>
+          <button class="tab-item ${filter==='진행중'?'active':''}" data-filter="진행중">진행중</button>
+          <button class="tab-item ${filter==='완료'?'active':''}" data-filter="완료">완료</button>
+          <span style="width:1px;background:var(--c-border-light);margin:4px 6px"></span>
+          ${CATEGORIES.map(c => `<button class="tab-item ${filter===c?'active':''}" data-filter="${c}">${c}</button>`).join('')}
+          <span style="width:1px;background:var(--c-border-light);margin:4px 6px"></span>
+          <button class="tab-item ${filter==='priority'?'active':''}" data-filter="priority">우선순위별</button>
+        </div>
+        <button class="btn btn-primary" id="addTaskBtn" style="flex-shrink:0">${ICONS.plus} 업무 추가</button>
       </div>
-      <div class="card"><div id="allTaskList">${filtered.length===0?'<div class="empty-state" style="padding:24px"><p>해당 업무가 없습니다</p></div>':
-        '<div class="task-row task-row-header"><span></span><span>업무명</span><span>프로젝트</span><span>마감일</span><span>상태</span><span></span></div>'+filtered.map(t=>`<div class="task-row"><input type="checkbox" class="task-checkbox" ${t.status==='완료'?'checked':''} data-id="${t.id}"><span>${esc(t.title)}</span><span class="task-project-tag">${esc(t.projectName||'-')}</span><span class="task-date">${t.dueDate||'-'}</span><span class="status-badge ${statusClass(t.status)}">${statusLabel(t.status)}</span><span class="task-actions"><button class="btn-icon edit-task" data-id="${t.id}">${ICONS.edit}</button><button class="btn-icon btn-danger del-task" data-id="${t.id}">${ICONS.trash}</button></span></div>`).join('')}</div></div>`;
+      ${bodyHtml}
+    `;
+    document.getElementById('pageContent').innerHTML = withDocPane(docPaneTaskId, tasksMainHtml);
+    document.getElementById('addTaskBtn').addEventListener('click', () => showTaskModal());
     document.getElementById('taskTabs').addEventListener('click', e => { const tab = e.target.closest('.tab-item'); if(tab) renderTasks(tab.dataset.filter); });
     bindTaskEvents(null);
+    bindDocPaneEvents(docPaneTaskId);
   }
-  function showTaskModal(ex, defProjId) {
+
+  function showTaskModal(ex, defProjId, defParentId, defGoalId) {
     const isEdit = !!ex;
     const projects = vals('projects');
-    const projOpts = projects.map(p => `<option value="${p.id}" ${(ex?.projectId||defProjId)===p.id?'selected':''}>${esc(p.name)}</option>`).join('');
+    const goals = vals('goals');
+    const allTasks = vals('tasks');
+    const projOpts = projects.map(p => `<option value="${p.id}" ${(ex?.projectId||defProjId)===p.id?'selected':''}>${esc(p.code?p.code+' ':'')}${esc(p.name)}</option>`).join('');
+    const goalOpts = goals.map(g => `<option value="${g.id}" ${(ex?.goalId||defGoalId)===g.id?'selected':''}>${g.year?esc('['+g.year+'] '):''}${esc(g.title)}</option>`).join('');
+    const catOpts = CATEGORIES.map(c => `<option value="${c}" ${ex?.category===c?'selected':''}>${c}</option>`).join('');
+
+    const excludeIds = new Set();
+    if (ex) { excludeIds.add(ex.id); getDescendantIds(ex.id).forEach(id => excludeIds.add(id)); }
+
     openModal(isEdit?'업무 수정':'업무 추가', `
       <div class="form-group"><label class="form-label">업무명 *</label><input class="form-input" id="mTaskTitle" value="${esc(ex?.title||'')}"></div>
       <div class="form-group"><label class="form-label">프로젝트</label><select class="form-select" id="mTaskProj"><option value="">— 선택 —</option>${projOpts}</select></div>
-      <div class="form-group"><label class="form-label">설명</label><textarea class="form-textarea" id="mTaskDesc">${esc(ex?.description||'')}</textarea></div>
+      <div class="form-group"><label class="form-label">연간 목표 (선택)</label><select class="form-select" id="mTaskGoal"><option value="">— 없음 —</option>${goalOpts}</select></div>
+      <div class="form-group"><label class="form-label">상위 업무</label><select class="form-select" id="mTaskParent"><option value="">— 없음 (최상위) —</option></select><div style="font-size:11px;color:var(--c-text-muted);margin-top:3px">같은 프로젝트의 업무만 상위로 선택 가능</div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label class="form-label">카테고리</label><select class="form-select" id="mTaskCat"><option value="">— 선택 —</option>${catOpts}</select></div>
         <div class="form-group"><label class="form-label">담당자</label><input class="form-input" id="mTaskAssignee" value="${esc(ex?.assignee||'')}"></div>
-        <div class="form-group"><label class="form-label">마감일</label><input class="form-input" id="mTaskDue" type="date" value="${ex?.dueDate||''}"></div>
+      </div>
+      <div class="form-group" id="mTaskMeetingFields" style="display:none">
+        <label class="form-label">🗓️ 회의 정보</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <input class="form-input" id="mTaskMeetingLocation" placeholder="회의 장소" value="${esc(ex?.meetingLocation||'')}">
+          <input class="form-input" id="mTaskMeetingDate" type="date" value="${ex?.meetingDate||''}">
+        </div>
+        <div style="font-size:11px;color:var(--c-text-muted);margin-top:5px">회의 결과에 따른 회의록 파일은 아래 "관련 자료"에서 추가하세요 (회의록으로 자동 분류됩니다)</div>
+      </div>
+      <div class="form-group" id="mTaskPurchaseFields" style="display:none">
+        <label class="form-label">🛒 구매 물품 목록</label>
+        <div id="mTaskPurchaseList" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:6px">
+          <input class="form-input" id="mTaskPurchaseItemName" placeholder="품목명" style="flex:2">
+          <input class="form-input" id="mTaskPurchaseItemAmount" type="number" placeholder="금액" style="flex:1">
+          <button type="button" class="btn" id="mTaskPurchaseAddBtn" style="flex-shrink:0">추가</button>
+        </div>
+        <div style="margin-top:8px;font-size:13px;font-weight:600;text-align:right;color:var(--c-primary)">지출액 / 총 구매 금액: <span id="mTaskPurchaseTotal">0원 / 0원</span></div>
+      </div>
+      <div class="form-group"><label class="form-label">설명</label><textarea class="form-textarea" id="mTaskDesc">${esc(ex?.description||'')}</textarea></div>
+      <div class="form-group">
+        <label class="form-label">📎 관련 자료</label>
+        <div id="mTaskDocList" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:6px;margin-bottom:6px">
+          <input class="form-input" id="mTaskDocHash" placeholder="다른 프로젝트 자료 연결 코드 입력 (예: 3F9K2A)" style="flex:1">
+          <button type="button" class="btn" id="mTaskDocLinkBtn" style="flex-shrink:0">연결</button>
+        </div>
+        <div id="mTaskDocNewForm" style="display:none;border:1px dashed var(--c-border);border-radius:var(--radius-sm);padding:10px;margin-top:6px">
+          <div class="form-group" style="margin-bottom:8px">
+            <div class="doc-type-toggle">
+              <button type="button" class="btn active" id="mTaskDocTypeFile" data-type="file">📎 자료</button>
+              <button type="button" class="btn" id="mTaskDocTypeMail" data-type="mail">📧 메일 링크</button>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:8px"><input class="form-input" id="mTaskDocNewTitle" placeholder="자료명 (메일 링크는 선택)"></div>
+          <div class="form-group" style="margin-bottom:8px"><input class="form-input" id="mTaskDocNewUrl" placeholder="링크 (URL)"></div>
+          <div class="form-group" style="margin-bottom:0">
+            <div class="thumb-paste-zone" id="mTaskDocNewThumbZone" contenteditable="true" data-placeholder="썸네일 이미지를 복사한 후 여기를 클릭하고 Ctrl+V로 붙여넣기"></div>
+            <div id="mTaskDocNewThumbWrap" style="display:none;margin-top:6px;align-items:center;gap:8px">
+              <img id="mTaskDocNewThumbImg" style="width:56px;height:56px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--c-border)" alt="">
+              <button type="button" class="btn" id="mTaskDocNewThumbClear" style="font-size:11px;padding:3px 8px">제거</button>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary" id="mTaskDocNewSave" style="font-size:12px;padding:5px 10px;margin-top:10px">추가</button>
+          <button type="button" class="btn" id="mTaskDocNewCancel" style="font-size:12px;padding:5px 10px;margin-top:10px">취소</button>
+        </div>
+        <button type="button" class="btn" id="mTaskDocAddBtn" style="font-size:12px;padding:5px 10px">${ICONS.plus} 새 자료 등록</button>
+        <div style="font-size:11px;color:var(--c-text-muted);margin-top:6px">메일 링크도 자료로 함께 등록해 관리할 수 있습니다. 등록 시 생성되는 코드를 다른 업무(다른 프로젝트 포함)에 입력하면 같은 자료를 연결해 볼 수 있습니다</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group"><label class="form-label">마감일</label><input class="form-input" id="mTaskDue" type="date" value="${ex?.dueDate||''}"></div>
         <div class="form-group"><label class="form-label">우선순위</label><select class="form-select" id="mTaskPriority"><option value="보통" ${ex?.priority==='보통'?'selected':''}>보통</option><option value="높음" ${ex?.priority==='높음'?'selected':''}>높음</option><option value="낮음" ${ex?.priority==='낮음'?'selected':''}>낮음</option></select></div>
-        <div class="form-group"><label class="form-label">상태</label><select class="form-select" id="mTaskStatus"><option value="대기" ${ex?.status==='대기'?'selected':''}>대기</option><option value="진행중" ${ex?.status==='진행중'?'selected':''}>진행중</option><option value="완료" ${ex?.status==='완료'?'selected':''}>완료</option></select></div>
-      </div>`,
+      </div>
+      <div class="form-group"><label class="form-label">상태</label><select class="form-select" id="mTaskStatus"><option value="대기" ${ex?.status==='대기'?'selected':''}>대기</option><option value="진행중" ${ex?.status==='진행중'?'selected':''}>진행중</option><option value="완료" ${ex?.status==='완료'?'selected':''}>완료</option></select></div>
+      ${isEdit?`<div class="form-group"><label class="form-label">업무 코드</label><div style="font-family:monospace;font-size:13px;padding:8px 12px;background:var(--c-surface-alt);border-radius:var(--radius-sm)">${esc(ex.hash||'-')}</div></div>`:''}`,
       `<button class="btn" onclick="document.getElementById('modalOverlay').hidden=true">취소</button><button class="btn btn-primary" id="mTaskSave">${isEdit?'수정':'추가'}</button>`);
+
+    function updateParentOptions() {
+      const projId = document.getElementById('mTaskProj').value;
+      const parentSel = document.getElementById('mTaskParent');
+      parentSel.innerHTML = '<option value="">— 없음 (최상위) —</option>';
+      if (projId) {
+        const projTasks = allTasks.filter(t => t.projectId === projId && !excludeIds.has(t.id));
+        const tree = buildTaskTree(projTasks, null, 0);
+        tree.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t.id;
+          opt.textContent = '  '.repeat(t._depth) + (t._depth > 0 ? '└ ' : '') + t.title;
+          if ((ex?.parentTaskId || defParentId) === t.id) opt.selected = true;
+          parentSel.appendChild(opt);
+        });
+      }
+    }
+    document.getElementById('mTaskProj').addEventListener('change', updateParentOptions);
+    updateParentOptions();
+
+    // Category-specific fields: meeting info / purchase item list
+    function updateCategoryFields() {
+      const cat = document.getElementById('mTaskCat').value;
+      document.getElementById('mTaskMeetingFields').style.display = cat === '회의' ? '' : 'none';
+      document.getElementById('mTaskPurchaseFields').style.display = cat === '구매' ? '' : 'none';
+    }
+    document.getElementById('mTaskCat').addEventListener('change', updateCategoryFields);
+    updateCategoryFields();
+
+    let purchaseItemsWorking = ex?.purchaseItems?.length ? ex.purchaseItems.map(it => ({ ...it })) : [];
+    function updatePurchaseTotalDisplay() {
+      const total = purchaseItemsWorking.reduce((s, it) => s + (Number(it.amount) || 0), 0);
+      const spent = purchaseItemsWorking.filter(it => it.purchased).reduce((s, it) => s + (Number(it.amount) || 0), 0);
+      document.getElementById('mTaskPurchaseTotal').textContent = `${spent.toLocaleString()}원 / ${total.toLocaleString()}원`;
+    }
+    function renderPurchaseItems() {
+      const wrap = document.getElementById('mTaskPurchaseList');
+      wrap.innerHTML = purchaseItemsWorking.length === 0 ? '<div style="font-size:12px;color:var(--c-text-muted)">등록된 품목이 없습니다</div>' :
+        purchaseItemsWorking.map((it, idx) => `<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--c-border-light);border-radius:var(--radius-sm);margin-bottom:5px;flex-wrap:wrap">
+          <button type="button" class="purchase-status-btn ${it.purchased?'done':''} mTaskPurchaseToggle" data-idx="${idx}">${it.purchased?'구매완료':'미구매'}</button>
+          ${it.purchased?`<input type="date" class="form-input mTaskPurchaseDateInput" data-idx="${idx}" value="${it.purchasedAt||''}" title="구매일" style="width:130px;font-size:11.5px;padding:5px 6px">`:''}
+          <input class="form-input mTaskPurchaseNameInput" data-idx="${idx}" value="${esc(it.name)}" placeholder="품명" style="flex:1;min-width:100px;font-size:12.5px;padding:5px 8px">
+          <input class="form-input mTaskPurchaseAmountInput" data-idx="${idx}" type="number" value="${it.amount||0}" placeholder="금액" style="width:110px;font-size:12.5px;padding:5px 8px;text-align:right">
+          <button type="button" class="btn-icon btn-danger mTaskPurchaseRemove" data-idx="${idx}" title="삭제">${ICONS.trash}</button>
+        </div>`).join('');
+      wrap.querySelectorAll('.mTaskPurchaseToggle').forEach(b => b.addEventListener('click', () => {
+        const it = purchaseItemsWorking[+b.dataset.idx];
+        it.purchased = !it.purchased;
+        if (it.purchased && !it.purchasedAt) it.purchasedAt = new Date().toISOString().slice(0, 10);
+        renderPurchaseItems();
+      }));
+      wrap.querySelectorAll('.mTaskPurchaseDateInput').forEach(inp => inp.addEventListener('change', () => { purchaseItemsWorking[+inp.dataset.idx].purchasedAt = inp.value; }));
+      wrap.querySelectorAll('.mTaskPurchaseRemove').forEach(b => b.addEventListener('click', () => { purchaseItemsWorking.splice(+b.dataset.idx, 1); renderPurchaseItems(); }));
+      wrap.querySelectorAll('.mTaskPurchaseNameInput').forEach(inp => inp.addEventListener('input', () => { purchaseItemsWorking[+inp.dataset.idx].name = inp.value; }));
+      wrap.querySelectorAll('.mTaskPurchaseAmountInput').forEach(inp => inp.addEventListener('input', () => {
+        purchaseItemsWorking[+inp.dataset.idx].amount = Number(inp.value) || 0;
+        updatePurchaseTotalDisplay();
+      }));
+      updatePurchaseTotalDisplay();
+    }
+    renderPurchaseItems();
+    document.getElementById('mTaskPurchaseAddBtn').addEventListener('click', () => {
+      const nameInp = document.getElementById('mTaskPurchaseItemName');
+      const amtInp = document.getElementById('mTaskPurchaseItemAmount');
+      const name = nameInp.value.trim();
+      if (!name) { toast('품목명을 입력하세요'); return; }
+      purchaseItemsWorking.push({ id: uid(), name, amount: Number(amtInp.value) || 0, purchased: false });
+      nameInp.value = ''; amtInp.value = '';
+      renderPurchaseItems();
+      nameInp.focus();
+    });
+
+    // Related documents (many-to-many via hash code) — includes mail links as a document type
+    let docIdsWorking = ex?.docIds?.length ? [...ex.docIds] : [];
+    let expandedDocId = null;
+    function renderTaskDocRows() {
+      const wrap = document.getElementById('mTaskDocList');
+      const docs = docIdsWorking.map(did => store.documents[did]).filter(Boolean);
+      wrap.innerHTML = docs.length === 0 ? '<div style="font-size:12px;color:var(--c-text-muted)">연결된 자료가 없습니다</div>' :
+        docs.map(d => `<div style="border:1px solid var(--c-border-light);border-radius:var(--radius-sm);margin-bottom:6px;overflow:hidden">
+          <div class="doc-list-item-row" data-id="${d.id}" style="display:flex;align-items:center;gap:8px;padding:7px 10px;cursor:pointer">
+            ${docThumbBoxHtml(d, 32)}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(d.title)}</div>
+              <div style="font-size:10.5px;color:var(--c-text-muted);font-family:monospace">코드: ${esc(d.hash||'-')}</div>
+            </div>
+            ${d.url?`<a href="${esc(d.url)}" target="_blank" rel="noopener" class="btn-icon doc-item-actions" title="열기" onclick="event.stopPropagation()">${d.type==='mail'?ICONS.mail:ICONS.openLink}</a>`:''}
+            <button type="button" class="btn-icon btn-danger doc-item-actions mTaskDocRemove" data-id="${d.id}" title="연결 해제">${ICONS.trash}</button>
+          </div>
+          ${d.id===expandedDocId?`<div style="background:var(--c-surface-alt);border-top:1px solid var(--c-border-light)">${docDetailExpandedHtml(d, ex?.id)}</div>`:''}
+        </div>`).join('');
+      wrap.querySelectorAll('.doc-list-item-row[data-id]').forEach(row => row.addEventListener('click', e => {
+        if (e.target.closest('.doc-item-actions')) return;
+        expandedDocId = expandedDocId === row.dataset.id ? null : row.dataset.id;
+        renderTaskDocRows();
+      }));
+      wrap.querySelectorAll('.mTaskDocRemove').forEach(b => b.addEventListener('click', () => {
+        docIdsWorking = docIdsWorking.filter(did => did !== b.dataset.id);
+        if (expandedDocId === b.dataset.id) expandedDocId = null;
+        renderTaskDocRows();
+      }));
+      bindDocThumbEditable('#mTaskDocList', renderTaskDocRows);
+      bindDocFieldsEditable('#mTaskDocList');
+      bindDocLinkedTaskLinks('#mTaskDocList');
+      bindDocLinkedProjectLinks('#mTaskDocList');
+    }
+    renderTaskDocRows();
+    document.getElementById('mTaskDocLinkBtn').addEventListener('click', () => {
+      const hashInput = document.getElementById('mTaskDocHash');
+      if (!hashInput.value.trim()) return;
+      const doc = findDocByHash(hashInput.value);
+      if (!doc) { toast('해당 코드의 자료를 찾을 수 없습니다'); return; }
+      if (docIdsWorking.includes(doc.id)) { toast('이미 연결된 자료입니다'); return; }
+      docIdsWorking.push(doc.id);
+      hashInput.value = '';
+      renderTaskDocRows();
+      toast('자료가 연결되었습니다');
+    });
+    let newDocType = 'file';
+    const typeFileBtn = document.getElementById('mTaskDocTypeFile');
+    const typeMailBtn = document.getElementById('mTaskDocTypeMail');
+    typeFileBtn.addEventListener('click', () => { newDocType = 'file'; typeFileBtn.classList.add('active'); typeMailBtn.classList.remove('active'); });
+    typeMailBtn.addEventListener('click', () => { newDocType = 'mail'; typeMailBtn.classList.add('active'); typeFileBtn.classList.remove('active'); });
+    const newDocThumb = setupThumbPasteZone('mTaskDocNewThumbZone', 'mTaskDocNewThumbWrap', 'mTaskDocNewThumbImg', 'mTaskDocNewThumbClear');
+    document.getElementById('mTaskDocAddBtn').addEventListener('click', () => { document.getElementById('mTaskDocNewForm').style.display = ''; });
+    document.getElementById('mTaskDocNewCancel').addEventListener('click', () => {
+      document.getElementById('mTaskDocNewForm').style.display = 'none';
+      document.getElementById('mTaskDocNewTitle').value = '';
+      document.getElementById('mTaskDocNewUrl').value = '';
+    });
+    document.getElementById('mTaskDocNewSave').addEventListener('click', () => {
+      const dTitleRaw = document.getElementById('mTaskDocNewTitle').value.trim();
+      const dUrl = document.getElementById('mTaskDocNewUrl').value.trim();
+      if (newDocType === 'mail' && !dUrl) { toast('메일 링크 URL을 입력하세요'); return; }
+      if (newDocType === 'file' && !dTitleRaw) { toast('자료명을 입력하세요'); return; }
+      const did = uid();
+      const autoCategory = document.getElementById('mTaskCat').value === '회의' ? '회의록' : '';
+      store.documents[did] = { id: did, hash: genDocHash(), title: dTitleRaw || (newDocType === 'mail' ? '메일 링크' : ''), type: newDocType, category: autoCategory, description: '', url: dUrl, thumbnail: newDocThumb.get(), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+      saveConfig();
+      docIdsWorking.push(did);
+      document.getElementById('mTaskDocNewTitle').value = '';
+      document.getElementById('mTaskDocNewUrl').value = '';
+      document.getElementById('mTaskDocNewForm').style.display = 'none';
+      renderTaskDocRows();
+      toast('자료가 추가되었습니다');
+    });
+
     document.getElementById('mTaskSave').addEventListener('click', () => {
       const title = document.getElementById('mTaskTitle').value.trim(); if (!title) { toast('업무명을 입력하세요'); return; }
       const projId = document.getElementById('mTaskProj').value;
       const proj = projects.find(p => p.id === projId);
+      const goalId = document.getElementById('mTaskGoal').value || '';
+      const goal = goals.find(g => g.id === goalId);
+      const parentId = document.getElementById('mTaskParent').value || null;
       const id = ex?.id || uid();
-      store.tasks[id] = { id, title, description: document.getElementById('mTaskDesc').value.trim(), projectId: projId, projectName: proj?.name||'', assignee: document.getElementById('mTaskAssignee').value.trim(), dueDate: document.getElementById('mTaskDue').value, priority: document.getElementById('mTaskPriority').value, status: document.getElementById('mTaskStatus').value, createdAt: ex?.createdAt||new Date().toISOString(), updatedAt: new Date().toISOString() };
-      saveDB(store); closeModal(); if(defProjId) renderProjectDetail(defProjId); else renderTasks(); toast(isEdit?'수정됨':'추가됨');
+      const oldProjId = ex?.projectId;
+      store.tasks[id] = {
+        id, title,
+        hash: ex?.hash || genTaskHash(),
+        description: document.getElementById('mTaskDesc').value.trim(),
+        projectId: projId, projectName: proj?.name||'',
+        goalId, goalTitle: goal?.title || '',
+        parentTaskId: parentId,
+        category: document.getElementById('mTaskCat').value,
+        assignee: document.getElementById('mTaskAssignee').value.trim(),
+        dueDate: document.getElementById('mTaskDue').value,
+        priority: document.getElementById('mTaskPriority').value,
+        status: document.getElementById('mTaskStatus').value,
+        meetingLocation: document.getElementById('mTaskMeetingLocation').value.trim(),
+        meetingDate: document.getElementById('mTaskMeetingDate').value,
+        purchaseItems: purchaseItemsWorking,
+        docIds: docIdsWorking,
+        createdAt: ex?.createdAt||new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      if (parentId) updateParentStatus(id);
+      saveLS();
+      // Save to appropriate project folder(s)
+      saveProjectTasks(projId);
+      if (oldProjId && oldProjId !== projId) saveProjectTasks(oldProjId);
+      closeModal();
+      if (defProjId) renderProjectDetail(defProjId);
+      else if (currentPage === 'project-detail' && currentCtx) renderProjectDetail(currentCtx);
+      else if (currentPage === 'purchases') renderPurchaseManagement();
+      else if (currentPage === 'goals') renderGoals();
+      else renderTasks();
+      toast(isEdit?'수정됨':'추가됨');
     });
+  }
+
+  // ═══════════════════════════════════════════
+  //  PURCHASE MANAGEMENT
+  // ═══════════════════════════════════════════
+  function defaultPurchaseFilter() {
+    const r = purchaseQuickRange('month');
+    return { start: r.start, end: r.end, projectId: '', tab: 'history', calMonth: r.start.slice(0,7), calSelectedDate: '', pendingExpandedId: '' };
+  }
+  function purchaseQuickRange(kind) {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    if (kind === 'all') return { start: '1970-01-01', end: '9999-12-31' };
+    if (kind === 'today') return { start: fmt(now), end: fmt(now) };
+    if (kind === 'week') {
+      const sunday = new Date(now);
+      sunday.setDate(now.getDate() - now.getDay());
+      return { start: fmt(sunday), end: fmt(now) };
+    }
+    return { start: fmt(new Date(now.getFullYear(), now.getMonth(), 1)), end: fmt(now) };
+  }
+  function getAllPurchaseRecords() {
+    const records = [];
+    for (const t of vals('tasks')) {
+      if (!Array.isArray(t.purchaseItems)) continue;
+      for (const it of t.purchaseItems) {
+        records.push({
+          taskId: t.id, taskTitle: t.title,
+          projectId: t.projectId || '', projectName: t.projectName || '(미지정)',
+          itemId: it.id, name: it.name, amount: Number(it.amount) || 0,
+          purchased: !!it.purchased, purchasedAt: it.purchasedAt || '', dueDate: t.dueDate || ''
+        });
+      }
+    }
+    return records;
+  }
+  function purchaseRecordRowHtml(r, extraMeta) {
+    return `<div class="goal-item purchase-record-row" data-task-id="${r.taskId}" style="padding:10px 16px;cursor:pointer">
+      <div class="goal-content">
+        <div class="goal-title" style="font-size:13px">${esc(r.name)}</div>
+        <div style="font-size:11px;color:var(--c-text-muted);margin-top:2px">${esc(r.projectName)} · ${esc(r.taskTitle)}${extraMeta||''}</div>
+      </div>
+      <div style="font-weight:600;font-variant-numeric:tabular-nums;flex-shrink:0${r.purchased?'':';color:var(--c-warning)'}">${fmtWon(r.amount)}</div>
+    </div>`;
+  }
+  function renderPurchaseHistoryHtml(records) {
+    if (records.length === 0) return '<div class="empty-state" style="padding:24px"><p>해당 기간에 집행된 구매 내역이 없습니다</p></div>';
+    const sorted = [...records].sort((a, b) => b.purchasedAt.localeCompare(a.purchasedAt));
+    const groups = {};
+    sorted.forEach(r => { (groups[r.purchasedAt.slice(0,7)] = groups[r.purchasedAt.slice(0,7)] || []).push(r); });
+    return Object.keys(groups).sort((a,b) => b.localeCompare(a)).map(month => {
+      const items = groups[month];
+      const monthTotal = items.reduce((s, r) => s + r.amount, 0);
+      return `<div class="section-divider">${month} <span style="font-weight:400;color:var(--c-text-muted)">${fmtWon(monthTotal)}</span></div>
+        <div class="card"><div>${items.map(r => purchaseRecordRowHtml(r, ' · ' + r.purchasedAt)).join('')}</div></div>`;
+    }).join('');
+  }
+  function renderPurchasePendingHtml(records) {
+    if (records.length === 0) return '<div class="empty-state" style="padding:24px"><p>미집행 구매 내역이 없습니다</p></div>';
+    const sorted = [...records].sort((a, b) => (a.dueDate || '9999-99-99').localeCompare(b.dueDate || '9999-99-99'));
+    return `<div class="card"><div>${sorted.map(r => {
+      const t = store.tasks[r.taskId];
+      const expanded = purchaseFilter.pendingExpandedId === r.itemId;
+      return `<div>
+        <div class="purchase-pending-row" data-item-id="${r.itemId}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--c-border-light);cursor:pointer">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:500">${esc(r.name)}</div>
+            <div style="font-size:11px;color:var(--c-text-muted);margin-top:2px">${esc(r.projectName)} · ${esc(r.taskTitle)}${r.dueDate?' · 마감 '+r.dueDate:''}</div>
+          </div>
+          <div style="font-weight:600;font-variant-numeric:tabular-nums;color:var(--c-warning);flex-shrink:0">${fmtWon(r.amount)}</div>
+        </div>
+        ${expanded && t ? `<div style="padding:12px 16px 14px;background:var(--c-surface-alt);border-bottom:1px solid var(--c-border-light)">
+          <div class="detail-meta" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr))">
+            <div><div class="detail-field-label">담당자</div><div class="detail-field-value">${esc(t.assignee||'-')}</div></div>
+            <div><div class="detail-field-label">우선순위</div><div class="detail-field-value">${esc(t.priority||'-')}</div></div>
+            <div><div class="detail-field-label">상태</div><div class="detail-field-value"><span class="status-badge ${statusClass(t.status)}">${statusLabel(t.status)}</span></div></div>
+            <div><div class="detail-field-label">마감일</div><div class="detail-field-value">${t.dueDate||'-'}</div></div>
+          </div>
+          ${t.description?`<div style="margin-top:8px;font-size:12px;color:var(--c-text-secondary)">${esc(t.description)}</div>`:''}
+          <button type="button" class="btn btn-primary purchase-pending-edit" data-task-id="${t.id}" style="margin-top:10px;font-size:12px;padding:6px 12px">${ICONS.edit} 업무 수정</button>
+        </div>` : ''}
+      </div>`;
+    }).join('')}</div></div>`;
+  }
+  function renderPurchaseByProjectHtml(records) {
+    if (records.length === 0) return '<div class="empty-state" style="padding:24px"><p>구매 내역이 없습니다</p></div>';
+    const byProj = {};
+    records.forEach(r => {
+      const key = r.projectId || '_none';
+      if (!byProj[key]) byProj[key] = { id: r.projectId, name: r.projectName, total: 0, spent: 0, pending: 0 };
+      byProj[key].total += r.amount;
+      if (r.purchased) byProj[key].spent += r.amount; else byProj[key].pending += r.amount;
+    });
+    const rows = Object.values(byProj).sort((a, b) => b.total - a.total);
+    return `<div class="card"><div>${rows.map(r => {
+      const pct = r.total ? Math.round(r.spent / r.total * 100) : 0;
+      return `<div class="goal-item purchase-project-row" ${r.id?`data-project-id="${r.id}" style="cursor:pointer"`:''}>
+        <div class="goal-content">
+          <div class="goal-title" style="font-size:13.5px">${esc(r.name)}</div>
+          <div class="progress-wrap" style="max-width:none;margin-top:6px"><div class="progress-bar"><div class="progress-fill${pct>=100?' done':''}" style="width:${pct}%"></div></div><div class="progress-text">${fmtWon(r.spent)} / ${fmtWon(r.total)} 지출 (${pct}%)</div></div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;font-size:12px;color:var(--c-text-muted);white-space:nowrap">
+          <div>지출 <b style="color:var(--c-primary)">${fmtWon(r.spent)}</b></div>
+          <div>미집행 <b style="color:var(--c-warning)">${fmtWon(r.pending)}</b></div>
+        </div>
+      </div>`;
+    }).join('')}</div></div>`;
+  }
+  function renderPurchaseCalendarHtml(records, calMonth) {
+    const purchased = records.filter(r => r.purchased && r.purchasedAt && r.purchasedAt.slice(0,7) === calMonth);
+    const byDay = {};
+    purchased.forEach(r => {
+      if (!byDay[r.purchasedAt]) byDay[r.purchasedAt] = { total: 0, items: [] };
+      byDay[r.purchasedAt].total += r.amount;
+      byDay[r.purchasedAt].items.push(r);
+    });
+    const [y, m] = calMonth.split('-').map(Number);
+    const startWeekday = new Date(y, m - 1, 1).getDay();
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const pad = n => String(n).padStart(2, '0');
+    let cells = '';
+    for (let i = 0; i < startWeekday; i++) cells += `<div class="cal-cell empty"></div>`;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${y}-${pad(m)}-${pad(d)}`;
+      const info = byDay[dateStr];
+      cells += `<div class="cal-cell${dateStr===todayStr?' today':''}${info?' has-data':''}${dateStr===purchaseFilter.calSelectedDate?' selected':''}" data-date="${dateStr}">
+        <div class="cal-day-num">${d}</div>
+        ${info ? `<div class="cal-day-total">${fmtWon(info.total)}</div><div class="cal-day-count">${info.items.length}건</div>` : ''}
+      </div>`;
+    }
+    const trailing = (7 - ((startWeekday + daysInMonth) % 7)) % 7;
+    for (let i = 0; i < trailing; i++) cells += `<div class="cal-cell empty"></div>`;
+    const monthTotal = purchased.reduce((s, r) => s + r.amount, 0);
+    const selectedDay = purchaseFilter.calSelectedDate ? byDay[purchaseFilter.calSelectedDate] : null;
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <button class="btn-icon" id="calPrevBtn" title="이전 달">${ICONS.back}</button>
+        <div style="font-size:15px;font-weight:600">${calMonth} <span style="font-size:12px;font-weight:400;color:var(--c-text-muted)">· 총 ${fmtWon(monthTotal)}</span></div>
+        <button class="btn-icon" id="calNextBtn" title="다음 달" style="transform:scaleX(-1)">${ICONS.back}</button>
+      </div>
+      <div class="cal-grid cal-header">${['일','월','화','수','목','금','토'].map(d => `<div class="cal-cell-header">${d}</div>`).join('')}</div>
+      <div class="cal-grid">${cells}</div>
+      ${selectedDay ? `<div class="section-divider">${purchaseFilter.calSelectedDate} 구매 내역</div><div class="card"><div>${selectedDay.items.map(r => purchaseRecordRowHtml(r)).join('')}</div></div>` : ''}
+    `;
+  }
+  function renderPurchaseManagement() {
+    document.getElementById('topbarActions').innerHTML = '';
+    const records = getAllPurchaseRecords();
+    const projects = vals('projects');
+    const projOpts = projects.map(p => `<option value="${p.id}" ${purchaseFilter.projectId===p.id?'selected':''}>${esc(p.code?p.code+' ':'')}${esc(p.name)}</option>`).join('');
+    const scoped = purchaseFilter.projectId ? records.filter(r => r.projectId === purchaseFilter.projectId) : records;
+    const periodRecords = scoped.filter(r => r.purchased && r.purchasedAt && r.purchasedAt >= purchaseFilter.start && r.purchasedAt <= purchaseFilter.end);
+    const periodTotal = periodRecords.reduce((s, r) => s + r.amount, 0);
+    const pendingAll = scoped.filter(r => !r.purchased);
+    const pendingTotal = pendingAll.reduce((s, r) => s + r.amount, 0);
+
+    const tab = purchaseFilter.tab || 'history';
+    let tabHtml;
+    if (tab === 'pending') tabHtml = renderPurchasePendingHtml(pendingAll);
+    else if (tab === 'byProject') tabHtml = renderPurchaseByProjectHtml(records);
+    else if (tab === 'calendar') tabHtml = renderPurchaseCalendarHtml(scoped, purchaseFilter.calMonth);
+    else tabHtml = renderPurchaseHistoryHtml(periodRecords);
+
+    document.getElementById('pageContent').innerHTML = `
+      <div class="card" style="padding:16px 18px;margin-bottom:20px">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+          <div class="form-group" style="margin-bottom:0"><label class="form-label">시작일</label><input type="date" class="form-input" id="purchStart" value="${purchaseFilter.start}" style="width:150px"></div>
+          <div class="form-group" style="margin-bottom:0"><label class="form-label">종료일</label><input type="date" class="form-input" id="purchEnd" value="${purchaseFilter.end}" style="width:150px"></div>
+          <div class="form-group" style="margin-bottom:0"><label class="form-label">프로젝트</label><select class="form-select" id="purchProject" style="width:200px"><option value="">전체 프로젝트</option>${projOpts}</select></div>
+          <div style="display:flex;gap:6px" id="purchQuickRangeBtns">
+            <button class="btn" data-range="month">이번달</button>
+            <button class="btn" data-range="week">이번주</button>
+            <button class="btn" data-range="today">오늘</button>
+            <button class="btn" data-range="all">전체</button>
+          </div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-tile purchase-stat-tile" data-tab="calendar" style="cursor:pointer"><div class="stat-label">기간 내 집행액</div><div class="stat-value">${fmtWon(periodTotal)}</div></div>
+        <div class="stat-tile purchase-stat-tile" data-tab="calendar" style="cursor:pointer"><div class="stat-label">기간 내 집행 건수</div><div class="stat-value">${periodRecords.length}건</div></div>
+        <div class="stat-tile purchase-stat-tile" data-tab="pending" style="cursor:pointer"><div class="stat-label">전체 미집행 금액</div><div class="stat-value" style="color:var(--c-warning)">${fmtWon(pendingTotal)}</div></div>
+        <div class="stat-tile purchase-stat-tile" data-tab="pending" style="cursor:pointer"><div class="stat-label">전체 미집행 건수</div><div class="stat-value" style="color:var(--c-warning)">${pendingAll.length}건</div></div>
+      </div>
+      <div class="tab-bar" id="purchTabs">
+        <button class="tab-item ${tab==='history'?'active':''}" data-tab="history">구매 내역</button>
+        <button class="tab-item ${tab==='calendar'?'active':''}" data-tab="calendar">달력</button>
+        <button class="tab-item ${tab==='pending'?'active':''}" data-tab="pending">미집행 내역</button>
+        <button class="tab-item ${tab==='byProject'?'active':''}" data-tab="byProject">프로젝트별 내역</button>
+      </div>
+      <div id="purchTabContent">${tabHtml}</div>
+    `;
+    document.getElementById('purchStart').addEventListener('change', e => { purchaseFilter.start = e.target.value; renderPurchaseManagement(); });
+    document.getElementById('purchEnd').addEventListener('change', e => { purchaseFilter.end = e.target.value; renderPurchaseManagement(); });
+    document.getElementById('purchProject').addEventListener('change', e => { purchaseFilter.projectId = e.target.value; renderPurchaseManagement(); });
+    document.getElementById('purchQuickRangeBtns').addEventListener('click', e => {
+      const b = e.target.closest('[data-range]');
+      if (!b) return;
+      const r = purchaseQuickRange(b.dataset.range);
+      purchaseFilter.start = r.start; purchaseFilter.end = r.end;
+      renderPurchaseManagement();
+    });
+    document.getElementById('purchTabs').addEventListener('click', e => {
+      const b = e.target.closest('.tab-item');
+      if (b) { purchaseFilter.tab = b.dataset.tab; renderPurchaseManagement(); }
+    });
+    document.querySelectorAll('.purchase-stat-tile[data-tab]').forEach(tile => tile.addEventListener('click', () => {
+      purchaseFilter.tab = tile.dataset.tab;
+      if (tile.dataset.tab === 'calendar') {
+        purchaseFilter.calMonth = purchaseFilter.start > '1970-01-01' ? purchaseFilter.start.slice(0, 7) : purchaseQuickRange('month').start.slice(0, 7);
+        purchaseFilter.calSelectedDate = '';
+      }
+      renderPurchaseManagement();
+    }));
+    document.querySelectorAll('.purchase-record-row[data-task-id]').forEach(row => row.addEventListener('click', () => showTaskModal(store.tasks[row.dataset.taskId])));
+    document.querySelectorAll('.purchase-project-row[data-project-id]').forEach(row => row.addEventListener('click', () => navigateTo('project-detail', row.dataset.projectId)));
+    document.querySelectorAll('.purchase-pending-row[data-item-id]').forEach(row => row.addEventListener('click', e => {
+      if (e.target.closest('.purchase-pending-edit')) return;
+      purchaseFilter.pendingExpandedId = purchaseFilter.pendingExpandedId === row.dataset.itemId ? '' : row.dataset.itemId;
+      renderPurchaseManagement();
+    }));
+    document.querySelectorAll('.purchase-pending-edit').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); showTaskModal(store.tasks[b.dataset.taskId]); }));
+    const calPrevBtn = document.getElementById('calPrevBtn');
+    const calNextBtn = document.getElementById('calNextBtn');
+    if (calPrevBtn) calPrevBtn.addEventListener('click', () => { shiftCalMonth(-1); renderPurchaseManagement(); });
+    if (calNextBtn) calNextBtn.addEventListener('click', () => { shiftCalMonth(1); renderPurchaseManagement(); });
+    document.querySelectorAll('.cal-cell.has-data[data-date]').forEach(cell => cell.addEventListener('click', () => {
+      purchaseFilter.calSelectedDate = purchaseFilter.calSelectedDate === cell.dataset.date ? '' : cell.dataset.date;
+      renderPurchaseManagement();
+    }));
+  }
+  function shiftCalMonth(delta) {
+    const [y, m] = purchaseFilter.calMonth.split('-').map(Number);
+    const d = new Date(y, m - 1 + delta, 1);
+    purchaseFilter.calMonth = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    purchaseFilter.calSelectedDate = '';
   }
 
   // ─── DOCS ───
+  const DOC_KIND_TABS = [
+    { key: 'all', label: '전체' },
+    { key: 'mail', label: '📧 메일 링크' },
+    { key: 'link', label: '🔗 링크 자료' },
+    { key: 'thumbnail', label: '🖼️ 썸네일 이미지' },
+    { key: 'other', label: '📝 기타' },
+  ];
   function renderDocs() {
     document.getElementById('topbarActions').innerHTML = `<button class="btn btn-primary" id="addDocBtn">${ICONS.plus} 자료 등록</button>`;
     document.getElementById('addDocBtn').addEventListener('click', () => showDocModal());
-    const docs = vals('documents');
-    document.getElementById('pageContent').innerHTML = `<div class="card"><div id="docList">${docs.length===0?'<div class="empty-state" style="padding:30px"><p>등록된 자료가 없습니다</p></div>':
-      docs.map(d => `<div class="goal-item"><div style="width:36px;height:36px;border-radius:var(--radius-sm);background:var(--c-accent-muted);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div><div class="goal-content"><div class="goal-title">${esc(d.title)}</div><div class="goal-description">${esc(d.description||'')}</div><div style="margin-top:4px;font-size:11px;color:var(--c-text-muted)">${d.category?'<span class="task-project-tag">'+esc(d.category)+'</span> · ':''}${d.createdAt?d.createdAt.slice(0,10):''}</div></div><div style="display:flex;gap:2px"><button class="btn-icon edit-doc" data-id="${d.id}">${ICONS.edit}</button><button class="btn-icon btn-danger del-doc" data-id="${d.id}">${ICONS.trash}</button></div></div>`).join('')}</div></div>`;
+    const allDocs = vals('documents');
+    const docs = docsKindFilter === 'all' ? allDocs : allDocs.filter(d => getDocKind(d) === docsKindFilter);
+    document.getElementById('pageContent').innerHTML = `
+      <div class="tab-bar" id="docKindTabs">
+        ${DOC_KIND_TABS.map(t => `<button class="tab-item ${docsKindFilter===t.key?'active':''}" data-kind="${t.key}">${t.label}</button>`).join('')}
+      </div>
+      <div class="card"><div id="docList">${docs.length===0?'<div class="empty-state" style="padding:30px"><p>해당 분류의 자료가 없습니다</p></div>':
+      docs.map(d => { const linkedCount = getDocLinkedTaskCount(d.id); return `<div>
+        <div class="goal-item doc-list-item-row" data-id="${d.id}" style="cursor:pointer">${docThumbBoxHtml(d, 36)}<div class="goal-content"><div class="goal-title">${esc(d.title)}</div><div class="goal-description">${esc(d.description||'')}</div><div style="margin-top:4px;font-size:11px;color:var(--c-text-muted);display:flex;gap:6px;flex-wrap:wrap;align-items:center">${d.type==='mail'?'<span class="task-project-tag">메일 링크</span>':''}${linkedCount>0?'<span class="task-project-tag">🔗 '+linkedCount+'개 업무 연결</span>':''}${d.category?'<span class="task-project-tag">'+esc(d.category)+'</span>':''}<span class="task-project-tag" style="font-family:monospace">코드: ${esc(d.hash||'-')}</span><span>${d.createdAt?d.createdAt.slice(0,10):''}</span></div></div><div class="doc-item-actions" style="display:flex;gap:2px">${d.url?`<a href="${esc(d.url)}" target="_blank" rel="noopener" class="btn-icon" title="열기">${d.type==='mail'?ICONS.mail:ICONS.openLink}</a>`:''}<button class="btn-icon edit-doc" data-id="${d.id}">${ICONS.edit}</button><button class="btn-icon btn-danger del-doc" data-id="${d.id}">${ICONS.trash}</button></div></div>
+        ${d.id===docsPageExpandedId?`<div style="background:var(--c-surface-alt);border-bottom:1px solid var(--c-border-light)">${docDetailExpandedHtml(d)}</div>`:''}
+      </div>`; }).join('')}</div></div>`;
+    document.getElementById('docKindTabs').addEventListener('click', e => {
+      const b = e.target.closest('.tab-item');
+      if (b) { docsKindFilter = b.dataset.kind; docsPageExpandedId = null; renderDocs(); }
+    });
+    document.querySelectorAll('.doc-list-item-row[data-id]').forEach(row => row.addEventListener('click', e => {
+      if (e.target.closest('.doc-item-actions')) return;
+      docsPageExpandedId = docsPageExpandedId === row.dataset.id ? null : row.dataset.id;
+      renderDocs();
+    }));
     document.querySelectorAll('.edit-doc').forEach(b => b.addEventListener('click', () => showDocModal(store.documents[b.dataset.id])));
-    document.querySelectorAll('.del-doc').forEach(b => b.addEventListener('click', () => { if(confirm('삭제하시겠습니까?')){ delete store.documents[b.dataset.id]; saveDB(store); renderDocs(); toast('삭제됨'); }}));
+    bindDocThumbEditable('#docList', renderDocs);
+    bindDocFieldsEditable('#docList');
+    bindDocLinkedTaskLinks('#docList');
+    bindDocLinkedProjectLinks('#docList');
+    document.querySelectorAll('.del-doc').forEach(b => b.addEventListener('click', () => {
+      if(confirm('삭제하시겠습니까? 연결된 모든 업무/프로젝트에서도 제거됩니다')){
+        const docId = b.dataset.id;
+        delete store.documents[docId];
+        vals('tasks').forEach(t => { if (Array.isArray(t.docIds) && t.docIds.includes(docId)) detachDocFromTask(t.id, docId); });
+        vals('projects').forEach(p => { if (Array.isArray(p.docIds) && p.docIds.includes(docId)) detachDocFromProject(p.id, docId); });
+        if (docsPageExpandedId === docId) docsPageExpandedId = null;
+        saveLS(); saveConfig(); renderDocs(); toast('삭제됨');
+      }
+    }));
   }
-  function showDocModal(ex) {
+  function showDocModal(ex, attachTaskId) {
     const isEdit = !!ex;
+    const exType = ex?.type || 'file';
+    const allTasksForDoc = vals('tasks').sort((a, b) => (a.projectName||'').localeCompare(b.projectName||'') || a.title.localeCompare(b.title));
+    const taskOpts = allTasksForDoc.map(t => `<option value="${t.id}">${t.projectName?esc('['+t.projectName+'] '):''}${esc(t.title)}</option>`).join('');
     openModal(isEdit?'자료 수정':'자료 등록', `
-      <div class="form-group"><label class="form-label">자료명 *</label><input class="form-input" id="mDocTitle" value="${esc(ex?.title||'')}"></div>
+      <div class="form-group">
+        <div class="doc-type-toggle">
+          <button type="button" class="btn ${exType==='file'?'active':''}" id="mDocTypeFile" data-type="file">📎 자료</button>
+          <button type="button" class="btn ${exType==='mail'?'active':''}" id="mDocTypeMail" data-type="mail">📧 메일 링크</button>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">자료명 (메일 링크는 선택)</label><input class="form-input" id="mDocTitle" value="${esc(ex?.title||'')}"></div>
       <div class="form-group"><label class="form-label">분류</label><select class="form-select" id="mDocCat"><option value="">— 선택 —</option><option value="설계문서" ${ex?.category==='설계문서'?'selected':''}>설계문서</option><option value="시험성적서" ${ex?.category==='시험성적서'?'selected':''}>시험성적서</option><option value="회의록" ${ex?.category==='회의록'?'selected':''}>회의록</option><option value="제안서" ${ex?.category==='제안서'?'selected':''}>제안서</option><option value="보고서" ${ex?.category==='보고서'?'selected':''}>보고서</option><option value="기타" ${ex?.category==='기타'?'selected':''}>기타</option></select></div>
       <div class="form-group"><label class="form-label">설명 / 메모</label><textarea class="form-textarea" id="mDocDesc">${esc(ex?.description||'')}</textarea></div>
-      <div class="form-group"><label class="form-label">링크 (URL)</label><input class="form-input" id="mDocUrl" placeholder="https://..." value="${esc(ex?.url||'')}"></div>`,
+      <div class="form-group"><label class="form-label">링크 (URL)</label><input class="form-input" id="mDocUrl" placeholder="https://..." value="${esc(ex?.url||'')}"></div>
+      <div class="form-group">
+        <label class="form-label">썸네일 이미지</label>
+        <div class="thumb-paste-zone" id="mDocThumbZone" contenteditable="true" data-placeholder="썸네일 이미지를 복사한 후 여기를 클릭하고 Ctrl+V로 붙여넣기"></div>
+        <div id="mDocThumbWrap" style="display:none;margin-top:6px;align-items:center;gap:8px">
+          <img id="mDocThumbImg" style="width:64px;height:64px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--c-border)" alt="">
+          <button type="button" class="btn" id="mDocThumbClear" style="font-size:11px;padding:3px 8px">제거</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">관련 업무 (선택)</label>
+        <div id="mDocTaskList" style="margin-bottom:8px"></div>
+        <div style="display:flex;gap:6px">
+          <select class="form-select" id="mDocTaskSelect" style="flex:1"><option value="">업무 선택...</option>${taskOpts}</select>
+          <button type="button" class="btn" id="mDocTaskAddBtn" style="flex-shrink:0">추가</button>
+        </div>
+      </div>
+      ${isEdit?`<div class="form-group"><label class="form-label">연결 코드</label><div style="font-family:monospace;font-size:13px;padding:8px 12px;background:var(--c-surface-alt);border-radius:var(--radius-sm)">${esc(ex.hash||'-')}</div><div style="font-size:11px;color:var(--c-text-muted);margin-top:3px">이 코드를 다른 업무(다른 프로젝트 포함)에 입력하면 이 자료를 함께 연결해 볼 수 있습니다</div></div>`:''}`,
       `<button class="btn" onclick="document.getElementById('modalOverlay').hidden=true">취소</button><button class="btn btn-primary" id="mDocSave">${isEdit?'수정':'등록'}</button>`);
+    let docType = exType;
+    const typeFileBtn = document.getElementById('mDocTypeFile');
+    const typeMailBtn = document.getElementById('mDocTypeMail');
+    typeFileBtn.addEventListener('click', () => { docType = 'file'; typeFileBtn.classList.add('active'); typeMailBtn.classList.remove('active'); });
+    typeMailBtn.addEventListener('click', () => { docType = 'mail'; typeMailBtn.classList.add('active'); typeFileBtn.classList.remove('active'); });
+    const docThumb = setupThumbPasteZone('mDocThumbZone', 'mDocThumbWrap', 'mDocThumbImg', 'mDocThumbClear', ex?.thumbnail || '');
+
+    // Related tasks (many-to-many): create or edit a document while linking it straight to one or more tasks
+    const prevLinkedTaskIds = ex ? getDocLinkedTasks(ex.id).map(t => t.id) : [];
+    let docTaskIdsWorking = ex ? [...prevLinkedTaskIds] : (attachTaskId ? [attachTaskId] : []);
+    function renderDocTaskChips() {
+      const wrap = document.getElementById('mDocTaskList');
+      const tasks = docTaskIdsWorking.map(id => store.tasks[id]).filter(Boolean);
+      wrap.innerHTML = tasks.length === 0 ? '<div style="font-size:12px;color:var(--c-text-muted)">연결된 업무가 없습니다</div>' :
+        tasks.map(t => `<span class="doc-linked-task-link" data-id="${t.id}" style="display:inline-flex;align-items:center;gap:6px;margin:0 6px 6px 0">${t.projectName?esc('['+t.projectName+'] '):''}${esc(t.title)}<button type="button" class="mDocTaskRemove" data-id="${t.id}" style="border:none;background:none;color:inherit;cursor:pointer;font-size:13px;line-height:1;padding:0">&times;</button></span>`).join('');
+      wrap.querySelectorAll('.mDocTaskRemove').forEach(b => b.addEventListener('click', () => {
+        docTaskIdsWorking = docTaskIdsWorking.filter(id => id !== b.dataset.id);
+        renderDocTaskChips();
+      }));
+    }
+    renderDocTaskChips();
+    document.getElementById('mDocTaskAddBtn').addEventListener('click', () => {
+      const sel = document.getElementById('mDocTaskSelect');
+      if (!sel.value) return;
+      if (!docTaskIdsWorking.includes(sel.value)) docTaskIdsWorking.push(sel.value);
+      sel.value = '';
+      renderDocTaskChips();
+    });
+
     document.getElementById('mDocSave').addEventListener('click', () => {
-      const title = document.getElementById('mDocTitle').value.trim(); if (!title) { toast('자료명을 입력하세요'); return; }
+      const titleRaw = document.getElementById('mDocTitle').value.trim();
+      const url = document.getElementById('mDocUrl').value.trim();
+      if (docType === 'mail' && !url) { toast('메일 링크 URL을 입력하세요'); return; }
+      if (docType === 'file' && !titleRaw) { toast('자료명을 입력하세요'); return; }
       const id = ex?.id || uid();
-      store.documents[id] = { id, title, category: document.getElementById('mDocCat').value, description: document.getElementById('mDocDesc').value.trim(), url: document.getElementById('mDocUrl').value.trim(), createdAt: ex?.createdAt||new Date().toISOString(), updatedAt: new Date().toISOString() };
-      saveDB(store); closeModal(); renderDocs(); toast(isEdit?'수정됨':'등록됨');
+      store.documents[id] = { id, hash: ex?.hash || genDocHash(), title: titleRaw || (docType === 'mail' ? '메일 링크' : ''), type: docType, category: document.getElementById('mDocCat').value, description: document.getElementById('mDocDesc').value.trim(), url, thumbnail: docThumb.get(), createdAt: ex?.createdAt||new Date().toISOString(), updatedAt: new Date().toISOString() };
+      const affectedProjectIds = new Set();
+      docTaskIdsWorking.forEach(taskId => { attachDocToTask(taskId, id); affectedProjectIds.add(store.tasks[taskId]?.projectId); });
+      prevLinkedTaskIds.filter(taskId => !docTaskIdsWorking.includes(taskId)).forEach(taskId => { detachDocFromTask(taskId, id); affectedProjectIds.add(store.tasks[taskId]?.projectId); });
+      saveLS(); saveConfig();
+      affectedProjectIds.forEach(pid => { if (pid) saveProjectTasks(pid); });
+      closeModal(); navigateTo(currentPage, currentCtx); toast(isEdit?'수정됨':'등록됨');
     });
   }
 
-  // ─── INIT ───
-  navigateTo('dashboard');
+  // ═══════════════════════════════════════════
+  //  INIT
+  // ═══════════════════════════════════════════
+  async function init() {
+    // 1. Try localStorage first (instant)
+    const lsData = loadLS();
+    if (lsData) store = lsData;
+
+    // 2. Try restoring file system
+    const fsOk = await restoreFS();
+    if (fsOk) {
+      const fileData = await loadFromFiles();
+      if (fileData && (Object.keys(fileData.projects).length > 0 || Object.keys(fileData.goals).length > 0)) {
+        store = fileData;
+        saveLS(); // sync LS with file data
+      }
+    }
+
+    // 3. Seed if empty
+    if (Object.keys(store.projects).length === 0) {
+      const id1 = uid(), id2 = uid(), g1 = uid();
+      store.projects[id1] = {
+        id: id1, code: 'PRJ-001', name: '8K 터널 균열관리 촬영 시스템',
+        description: '터널균열관리를 위한 8K 고화소 글로벌셔터카메라를 이용한 터널 벽면 영상 촬영장치, 조명 시스템, 저장시스템, 운영시스템 개발',
+        status: '진행중', startDate: '2024-01-01', endDate: '', _folder: 'PRJ-001',
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+      };
+      store.projects[id2] = {
+        id: id2, code: 'PRJ-002', name: '고성능 엣지 AI CCTV 개발',
+        description: '고성능 엣지 AI기능이 탑재된 CCTV 개발 — 시스템 분석, 솔루션 제안, 시제품 제작, 성능검증, 양산까지',
+        status: '진행중', startDate: '2024-03-01', endDate: '', _folder: 'PRJ-002',
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+      };
+      store.goals[g1] = {
+        id: g1, title: '비전솔루션 전문기업 기반 구축',
+        description: '미래사회가 필요로 하는 영상정보 생산 제품, 시스템 연결, 인터페이스 장치와 서비스 생산 체계 확립',
+        year: new Date().getFullYear(), status: '진행중',
+        createdAt: new Date().toISOString(), updatedAt: new Date().toISOString()
+      };
+      saveLS();
+      if (rootHandle) await saveAllToFiles();
+    }
+
+    // 4. Migrate legacy single-value fields to the new list-based fields
+    migrateData();
+
+    navigateTo('dashboard');
+  }
+
+  function migrateData() {
+    let changed = false;
+    for (const p of vals('projects')) {
+      if (!Array.isArray(p.docIds)) { p.docIds = []; }
+    }
+    for (const t of vals('tasks')) {
+      if (!t.hash) { t.hash = genTaskHash(); changed = true; }
+      if (!Array.isArray(t.docIds)) { t.docIds = []; }
+      if (Array.isArray(t.purchaseItems)) {
+        t.purchaseItems.forEach(it => {
+          if (typeof it.purchased !== 'boolean') { it.purchased = false; changed = true; }
+          if (it.purchased && !it.purchasedAt) { it.purchasedAt = (t.updatedAt || new Date().toISOString()).slice(0, 10); changed = true; }
+        });
+      }
+      // Legacy single email link field
+      const legacyLinks = t.emailLink ? [t.emailLink] : (Array.isArray(t.emailLinks) ? t.emailLinks : []);
+      if (legacyLinks.length) {
+        legacyLinks.filter(Boolean).forEach(url => {
+          const did = uid();
+          store.documents[did] = { id: did, hash: genDocHash(), title: '메일 링크', type: 'mail', category: '', description: '', url, thumbnail: '', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+          attachDocToTask(t.id, did);
+        });
+        changed = true;
+      }
+      delete t.emailLink;
+      delete t.emailLinks;
+    }
+    for (const d of vals('documents')) {
+      if (!d.hash) { d.hash = genDocHash(); changed = true; }
+      if (!d.type) { d.type = 'file'; changed = true; }
+      if (d.taskId) {
+        if (store.tasks[d.taskId] && attachDocToTask(d.taskId, d.id)) changed = true;
+        delete d.taskId; delete d.taskTitle;
+        changed = true;
+      }
+    }
+    if (changed) saveLS();
+  }
+
+  init().catch(console.error);
 })();
 </script>
 </body>
